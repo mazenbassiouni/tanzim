@@ -15,6 +15,10 @@ class CreateMissionsTable extends Migration
     {
         Schema::create('missions', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('desc');
+            $table->enum('status', ['done','active']);
+            $table->timestamp('started_at');
             $table->timestamps();
         });
     }

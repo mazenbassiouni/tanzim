@@ -11,13 +11,19 @@
         @yield('styles')
     </head>
     <body>
-            <div>
+            @include('includes.navbar')
+            <div class="container py-5">
                 @yield('content')
             </div>
             
             <script src="{{ asset('js/jquery.min.js') }}"></script>
             <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
             <script src="{{ asset('js/app-functions.js') }}"></script>
+            <script>
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
+            </script>
             @yield('scripts')
     </body>
 </html>

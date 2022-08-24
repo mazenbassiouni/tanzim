@@ -45,21 +45,21 @@
                     <input type="number" name="missionId" value="{{$mission->id}}" hidden>
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control text-right" name="title">
+                            <input type="text" class="form-control text-right" name="title" value="{{ old('title') && session('error_type') == 'new task' ? old('title') : '' }}">
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
-                            <textarea class="form-control text-right" aria-label="With textarea" name="desc"></textarea>
+                            <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ old('desc') && session('error_type') == 'new task' ? old('desc') : '' }}</textarea>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem">الموضوع</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
-                            <input type="date" class="form-control text-right" name="dueTo">
+                            <input type="date" class="form-control text-right" name="dueTo" value="{{ old('dueTo') && session('error_type') == 'new task' ? old('dueTo') : '' }}" {{ old('status') == 'pending' && session('error_type') == 'new task' ? 'disabled' : '' }}>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem">قبل تاريخ</span>
                             </div>
@@ -67,17 +67,21 @@
                         
                         <div class="text-right">الحالة</div>
                         <div class="form-check d-flex justify-content-end align-items-center">
-                            <input class="form-check-input" type="radio" name="status" id="active" value="active" checked>
+                            <input class="form-check-input" type="radio" name="status" id="active" value="active" {{ old('status') == 'pending' && session('error_type') == 'new task' ? '' : 'checked' }}>
                             <label class="form-check-label text-muted mr-4" for="active">
                                 جاري
                             </label>
                         </div>
 
                         <div class="form-check d-flex justify-content-end align-items-center">
-                            <input class="form-check-input" type="radio" name="status" id="pending" value="pending">
+                            <input class="form-check-input" type="radio" name="status" id="pending" value="pending" {{ old('status') == 'pending' && session('error_type') == 'new task' ? 'checked' : '' }}>
                             <label class="form-check-label text-muted mr-4" for="pending">
                                 مُعلق
                             </label>
+                        </div>
+
+                        <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="newTaskErrorBag">
+                            <ul class="list-unstyled m-0" id="newTaskErrorsList"></ul>
                         </div>
 
                     </div>
@@ -104,17 +108,28 @@
                     <input type="number" name="missionId" value="{{$mission->id}}" hidden>
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control text-right" name="title" value="{{ $mission->title }}">
+                            <input type="text" class="form-control text-right" name="title" value="{{ old('title')  && session('error_type') == 'edit mission' ? old('title') : $mission->title }}">
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                             </div>
                         </div>
 
-                        <div class="input-group">
-                            <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ $mission->desc }}</textarea>
+                        <div class="input-group mb-3">
+                            <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ old('desc')  && session('error_type') == 'edit mission' ? old('desc') : $mission->desc }}</textarea>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem">الموضوع</span>
                             </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="date" class="form-control text-right" name="startedAt" value="{{ old('startedAt')  && session('error_type') == 'edit mission' ? old('startedAt') : $mission->started_at->format('Y-m-d') }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="width: 5.5rem">تاريخ البدء</span>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editMissionErrorBag">
+                            <ul class="list-unstyled m-0" id="editMissionErrorsList"></ul>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-start">
@@ -140,4 +155,70 @@
             })
         })
     </script>
+
+    @if ($errors->any() && session('error_type') == 'edit mission' )
+        <script>
+            $(document).ready(function(){
+                let errors = @json($errors->all());
+                let bag = '';
+                errors.forEach(error => {
+                    bag += `<li>${error}<img height="14" class="ml-3" src="{{ asset('svg/times-circle.svg') }}" alt=""></i></li>`
+                });
+                $('#editMissionModal').modal('show');
+                $('#editMissionErrorsList').html(bag);
+                $('#editMissionErrorBag').removeClass('d-none');
+
+                setTimeout(() => {
+                    $('#editMissionErrorBag').addClass('d-none');
+                }, 10000);
+            })
+            @if(session('test'))
+                console.log(@json(session('test')));
+            @endif
+        </script>
+    @endif
+
+    @if ($errors->any() && session('error_type') == 'new task' )
+        <script>
+            $(document).ready(function(){
+                let errors = @json($errors->all());
+                let bag = '';
+                errors.forEach(error => {
+                    bag += `<li>${error}<img height="14" class="ml-3" src="{{ asset('svg/times-circle.svg') }}" alt=""></i></li>`
+                });
+                $('#newTaskModal').modal('show');
+                $('#newTaskErrorsList').html(bag);
+                $('#newTaskErrorBag').removeClass('d-none');
+
+                setTimeout(() => {
+                    $('#newTaskErrorBag').addClass('d-none');
+                }, 10000);
+            })
+            @if(session('test'))
+                console.log(@json(session('test')));
+            @endif
+        </script>
+    @endif
+
+    @if ($errors->any() && session('error_type') == 'edit task' && old('taskId') )
+        <script>
+            $(document).ready(function(){
+                let errors = @json($errors->all());
+                let bag = '';
+                errors.forEach(error => {
+                    bag += `<li>${error}<img height="14" class="ml-3" src="{{ asset('svg/times-circle.svg') }}" alt=""></i></li>`
+                });
+                $('#editTask{{old('taskId')}}').modal('show');
+                $('#editTask{{old('taskId')}} #editTaskErrorsList').html(bag);
+                $('#editTask{{old('taskId')}} #editTaskErrorBag').removeClass('d-none');
+
+                setTimeout(() => {
+                    $('#editTask{{old('taskId')}} #editTaskErrorBag').addClass('d-none');
+                }, 10000);
+            })
+            @if(session('test'))
+                console.log(@json(session('test')));
+            @endif
+        </script>
+    @endif
 @endsection

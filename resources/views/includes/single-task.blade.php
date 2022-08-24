@@ -64,21 +64,21 @@
                 <input type="number" name="taskId" value="{{$task->id}}" hidden>
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control text-right" name="title" value="{{ $task->title }}">
+                        <input type="text" class="form-control text-right" name="title" value="{{ old('title') && session('error_type') == 'edit task' && old('taskId') == $task->id ? old('title') : $task->title }}">
                         <div class="input-group-append">
                             <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                         </div>
                     </div>
 
                     <div class="input-group mb-3">
-                        <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ $task->desc }}</textarea>
+                        <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ old('desc') && session('error_type') == 'edit task' && old('taskId') == $task->id ? old('desc') : $task->desc }}</textarea>
                         <div class="input-group-append">
                             <span class="input-group-text" style="width: 5.5rem">الموضوع</span>
                         </div>
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="date" class="form-control text-right" name="dueTo" value="{{ $task->due_to->format('Y-m-d') }}">
+                        <input type="date" class="form-control text-right" name="dueTo" value="{{ old('dueTo') && session('error_type') == 'edit task' && old('taskId') == $task->id ? old('dueTo') : $task->due_to->format('Y-m-d') }}" {{ old('status') && session('error_type') == 'edit task' && old('taskId') == $task->id ? (old('status') == 'active' ? '' : 'disabled') : ($task->status == 'done' || $task->status == 'pending' ? 'disabled' : '' ) }}>
                         <div class="input-group-append">
                             <span class="input-group-text" style="width: 5.5rem">قبل تاريخ</span>
                         </div>
@@ -86,17 +86,21 @@
                     
                     <div class="text-right">الحالة</div>
                     <div class="form-check d-flex justify-content-end align-items-center">
-                        <input class="form-check-input" type="radio" name="status" id="active" value="active" {{ $task->status == 'active' ? 'checked' : '' }}>
+                        <input class="form-check-input" type="radio" name="status" id="active" value="active" {{ old('status')  && session('error_type') == 'edit task' && old('taskId') == $task->id ? (old('status') == 'active' ? 'checked' : '') : ($task->status == 'active' ? 'checked' : '') }}>
                         <label class="form-check-label text-muted mr-4" for="active">
                             جاري
                         </label>
                     </div>
 
                     <div class="form-check d-flex justify-content-end align-items-center">
-                        <input class="form-check-input" type="radio" name="status" id="pending" value="pending" {{ $task->status == 'pending' ? 'checked' : '' }}>
+                        <input class="form-check-input" type="radio" name="status" id="pending" value="pending" {{ old('status') && session('error_type') == 'edit task' && old('taskId') == $task->id ? (old('status') == 'pending' ? 'checked' : '') : ($task->status == 'pending' ? 'checked' : '') }}>
                         <label class="form-check-label text-muted mr-4" for="pending">
                             مُعلق
                         </label>
+                    </div>
+
+                    <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editTaskErrorBag">
+                        <ul class="list-unstyled m-0" id="editTaskErrorsList"></ul>
                     </div>
 
                 </div>

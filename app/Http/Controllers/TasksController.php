@@ -5,10 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Mission;
+use Illuminate\Support\Facades\Validator;
 
 class TasksController extends Controller
 {
     public function addTask(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'title' => 'required',
+            'desc' => 'required',
+            'status' => 'required',
+            'dueTo' => 'required_if:status,active',
+            'missionId' => 'required'
+        ],[
+            'title.required' => 'يرجى إدخال العنوان',
+            'desc.required' => 'يرجى إدخال الموضوع',
+            'dueTo.required_if' => 'يرجى إدخال التاريخ ',
+        ]);
+
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput()->with(['error_type' => 'new task']);
+        }
 
         $mission = Mission::findOrFail($request->missionId);
 
@@ -24,6 +42,23 @@ class TasksController extends Controller
     }
 
     public function editTask(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'title' => 'required',
+            'desc' => 'required',
+            'dueTo' => 'required_if:status,active',
+            'taskId' => 'required'
+        ],[
+            'title.required' => 'يرجى إدخال العنوان',
+            'desc.required' => 'يرجى إدخال الموضوع',
+            'dueTo.required_if' => 'يرجى إدخال التاريخ ',
+        ]);
+
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput()->with(['error_type' => 'edit task']);
+        }
+
         $task = Task::findOrFail($request->taskId);
 
         $task->title            = $request->title;

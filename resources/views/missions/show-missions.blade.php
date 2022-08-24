@@ -33,24 +33,28 @@
                     @csrf
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control text-right" name="title">
+                            <input type="text" class="form-control text-right" name="title" value="{{ old('title') }}">
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
-                            <textarea class="form-control text-right" aria-label="With textarea" name="desc"></textarea>
+                            <textarea class="form-control text-right" aria-label="With textarea" name="desc">{{ old('desc') }}</textarea>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem">الموضوع</span>
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <input type="date" class="form-control text-right" name="startedAt">
+                            <input type="date" class="form-control text-right" name="startedAt" value="{{ old('startedAt') }}">
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem">تاريخ البدء</span>
                             </div>
+                        </div>
+
+                        <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="newMissionErrorBag">
+                            <ul class="list-unstyled m-0" id="newMissionErrorsList"></ul>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-start">
@@ -61,4 +65,25 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    @if ($errors->any() && session('error_type') == 'new mission')
+        <script>
+            $(document).ready(function(){
+                let errors = @json($errors->all());
+                let bag = '';
+                errors.forEach(error => {
+                    bag += `<li>${error}<img height="14" class="ml-3" src="{{ asset('svg/times-circle.svg') }}" alt=""></i></li>`
+                });
+                $('#newMissionModal').modal('show');
+                $('#newMissionErrorsList').html(bag);
+                $('#newMissionErrorBag').removeClass('d-none');
+
+                setTimeout(() => {
+                    $('#newMissionErrorBag').addClass('d-none');
+                }, 10000);
+            })
+        </script>
+    @endif
 @endsection

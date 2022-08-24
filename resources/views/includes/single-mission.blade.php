@@ -7,7 +7,7 @@
         <h5 class="mb-0">
             <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}">
                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
-                    {{$mission->title}}
+                    <b>{{$mission->title}}</b>
                 </button>
             </a>
         </h5>

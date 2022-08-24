@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use Illuminate\Support\Facades\Validator;
 
 class MissionsController extends Controller
 {
@@ -14,6 +15,23 @@ class MissionsController extends Controller
     }
 
     public function addMission(Request $request){
+
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'title' => 'required',
+            'desc' => 'required',
+            'startedAt' => 'required',
+        ],[
+            'title.required' => 'يرجى إدخال العنوان',
+            'desc.required' => 'يرجى إدخال الموضوع',
+            'startedAt.required' => 'يرجى إدخال تاريخ البدء',
+        ]);
+
+        if($validator->fails()){
+            return back()->withErrors($validator)->withInput()->with(['error_type' => 'new mission']);
+        }
+    
         $mission                = new Mission();
         $mission->title         = $request->title;
         $mission->desc          = $request->desc;
@@ -25,6 +43,24 @@ class MissionsController extends Controller
     }
 
     public function editMission(Request $request){
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'title' => 'required',
+            'desc' => 'required',
+            'startedAt' => 'required',
+            'missionId' => 'required'
+        ],[
+            'title.required' => 'يرجى إدخال العنوان',
+            'desc.required' => 'يرجى إدخال الموضوع',
+            'startedAt.required' => 'يرجى إدخال تاريخ البدء',
+        ]);
+
+        if($validator->fails()){
+            // $request->error_type = 'edit mission';
+            return back()->withErrors($validator)->withInput()->with(['error_type' => 'edit mission']);
+        }
+
         $mission = Mission::findOrFail($request->missionId);
 
         $mission->title         = $request->title;

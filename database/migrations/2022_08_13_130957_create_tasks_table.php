@@ -19,7 +19,7 @@ class CreateTasksTable extends Migration
             $table->string('title');
             $table->string('desc');
             $table->enum('status', ['done','pending','active']);
-            $table->timestamp('due_to');
+            $table->timestamp('due_to')->nullable()->default(null);
             $table->timestamps();
         });
     }

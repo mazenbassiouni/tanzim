@@ -2,17 +2,20 @@
     <div class="card-header py-1 d-flex justify-content-between align-items-center">
         <div>
             <a href="#" data-toggle="modal" data-target="#deleteMission{{$mission->id}}" class="p-2"><img height="15" src="{{ asset('svg/trash.svg') }}" alt=""></a>
-            <a href="{{ url('mission', $mission->id) }}" class="p-2 ml-1"><img height="15" src="{{ asset('svg/eye.svg') }}" alt=""></a>
+            <a href="{{ url('mission', $mission->id) }}" class="p-2 ml-1 mr-5"><img height="15" src="{{ asset('svg/eye.svg') }}" alt=""></a>
+            @if($status == 'active' )
+                {{ Carbon::create($mission->due_date)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
+            @endif
         </div>
         <h5 class="mb-0">
             <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
                     <b>{{$mission->title}}</b>
                 </button>
             </a>
         </h5>
     </div>
-    <div id="collapse{{$mission->id}}" class="collapse" data-parent="#missionsAccordion">
+    <div id="collapse{{$status.$mission->id}}" class="collapse" data-parent="#{{$status}}MissionsAccordion">
         <div class="card-body">
             <ul style="direction: rtl;">
                 @foreach( $mission->tasks as $task )

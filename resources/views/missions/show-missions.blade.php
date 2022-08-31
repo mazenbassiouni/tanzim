@@ -10,11 +10,33 @@
 
     <div class="card text-right my-5">
         <div class="card-header h5 text-white bg-primary">
-            التكاليف الحالية
+            التكاليف الجارية
         </div>
-        <div class="card-body" id="missionsAccordion">
-            @foreach ($missions as $mission)
-                @include('includes.single-mission')
+        <div class="card-body" id="activeMissionsAccordion">
+            @foreach ($activeMissions as $mission)
+                @include('includes.single-mission', ['status' => 'active'])
+            @endforeach
+        </div>
+    </div>
+
+    <div class="card text-right my-5">
+        <div class="card-header h5 text-white bg-primary">
+            التكاليف المعلقة
+        </div>
+        <div class="card-body" id="pendingMissionsAccordion">
+            @foreach ($pendingMissions as $mission)
+                @include('includes.single-mission', ['status' => 'pending'])
+            @endforeach
+        </div>
+    </div>
+
+    <div class="card text-right my-5">
+        <div class="card-header h5 text-white bg-primary">
+            التكاليف المنتهية
+        </div>
+        <div class="card-body" id="doneMissionsAccordion">
+            @foreach ($doneMissions as $mission)
+                @include('includes.single-mission', ['status' => 'done'])
             @endforeach
         </div>
     </div>

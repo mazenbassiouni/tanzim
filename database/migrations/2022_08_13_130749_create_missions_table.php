@@ -18,7 +18,7 @@ class CreateMissionsTable extends Migration
             $table->string('title');
             $table->string('desc');
             $table->enum('status', ['done','active']);
-            $table->timestamp('started_at');
+            $table->timestamp('started_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

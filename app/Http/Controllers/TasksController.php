@@ -63,7 +63,9 @@ class TasksController extends Controller
 
         $task->title            = $request->title;
         $task->desc             = $request->desc;
-        $task->due_to           = $request->dueTo;
+        if( isset($request->dueTo) ){
+            $task->due_to           = $request->dueTo;
+        }
         if( isset($request->status) ){
             $task->status           = $request->status;
         }

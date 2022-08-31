@@ -2,7 +2,10 @@
     <div class="card-header py-1 d-flex justify-content-between align-items-center @if($task->status == 'done') alert-success @elseif($task->status == 'active') alert-danger @elseif($task->status == 'pending') alert-warning @endif">
         <div>
             <a href="#" data-toggle="modal" data-target="#deleteTask{{$task->id}}" class="p-2"><img height="15" src="{{ asset('svg/trash.svg') }}" alt=""></a>
-            <a href="#" data-toggle="modal" data-target="#editTask{{$task->id}}" class="p-2 ml-1" ><img height="15" src="{{ asset('svg/grey-pencil.svg') }}" alt=""></a>
+            <a href="#" data-toggle="modal" data-target="#editTask{{$task->id}}" class="p-2 ml-1 mr-5" ><img height="15" src="{{ asset('svg/grey-pencil.svg') }}" alt=""></a>
+            @if($task->status == 'active' )
+                {{ Carbon::create($task->due_to)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
+            @endif
         </div>
         <h5 class="mb-0">
             <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$task->id}}" aria-expanded="true" aria-controls="collapseOne">
@@ -78,7 +81,7 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="date" class="form-control text-right" name="dueTo" value="{{ old('dueTo') && session('error_type') == 'edit task' && old('taskId') == $task->id ? old('dueTo') : $task->due_to->format('Y-m-d') }}" {{ old('status') && session('error_type') == 'edit task' && old('taskId') == $task->id ? (old('status') == 'active' ? '' : 'disabled') : ($task->status == 'done' || $task->status == 'pending' ? 'disabled' : '' ) }}>
+                        <input type="date" class="form-control text-right" name="dueTo" value="{{ old('dueTo') && session('error_type') == 'edit task' && old('taskId') == $task->id ? old('dueTo') : ($task->due_to ? $task->due_to->format('Y-m-d') : '') }}" {{ old('status') && session('error_type') == 'edit task' && old('taskId') == $task->id ? (old('status') == 'active' ? '' : 'disabled') : ($task->status == 'done' || $task->status == 'pending' ? 'disabled' : '' ) }}>
                         <div class="input-group-append">
                             <span class="input-group-text" style="width: 5.5rem">قبل تاريخ</span>
                         </div>

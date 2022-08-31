@@ -9,9 +9,43 @@ use Illuminate\Support\Facades\Validator;
 class MissionsController extends Controller
 {
     public function index(){
-        $missions = Mission::all();
+        $activeMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                    ->where('tasks.status', 'active')
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->select('missions.*')
+                    ->selectRaw('MIN(tasks.due_to) as due_date')
+                    ->orderBy('due_date')
+                    ->get();
 
-        return view('missions.show-missions')->with(['missions' => $missions]);
+        $pendingMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                    ->where('tasks.status', 'pending')
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->select('missions.*')
+                    ->selectRaw('MIN(tasks.due_to) as due_date')
+                    ->orderBy('tasks.created_at')
+                    ->get();
+
+        $doneMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                    ->whereNotExists(function($query){
+                        $query->selectRaw(1)
+                            ->from('tasks')
+                            ->whereColumn('tasks.mission_id', '=', 'missions.id')
+                            ->where(function($query){
+                                $query->where('tasks.status', 'pending')
+                                    ->orWhere('tasks.status', 'active');
+                            });
+                    })
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->select('missions.*')
+                    ->selectRaw('MAX(tasks.due_to) as due_date')
+                    ->orderBy('due_date')
+                    ->get();
+
+        return view('missions.show-missions')->with([
+            'activeMissions' => $activeMissions,
+            'pendingMissions' => $pendingMissions,
+            'doneMissions' => $doneMissions
+        ]);
     }
 
     public function addMission(Request $request){

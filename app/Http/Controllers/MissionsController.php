@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class MissionsController extends Controller
@@ -11,7 +12,7 @@ class MissionsController extends Controller
     public function index(){
         $activeMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
                     ->where('tasks.status', 'active')
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
                     ->select('missions.*')
                     ->selectRaw('MIN(tasks.due_to) as due_date')
                     ->orderBy('due_date')
@@ -19,7 +20,7 @@ class MissionsController extends Controller
 
         $pendingMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
                     ->where('tasks.status', 'pending')
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
                     ->select('missions.*')
                     ->selectRaw('MIN(tasks.due_to) as due_date')
                     ->orderBy('tasks.created_at')
@@ -35,16 +36,19 @@ class MissionsController extends Controller
                                     ->orWhere('tasks.status', 'active');
                             });
                     })
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at')
+                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
                     ->select('missions.*')
                     ->selectRaw('MAX(tasks.due_to) as due_date')
                     ->orderBy('due_date')
                     ->get();
 
-        return view('missions.show-missions')->with([
+        $categories = Category::all();
+
+        return view('tanzim.show-missions')->with([
             'activeMissions' => $activeMissions,
             'pendingMissions' => $pendingMissions,
-            'doneMissions' => $doneMissions
+            'doneMissions' => $doneMissions,
+            'categories' => $categories
         ]);
     }
 
@@ -56,10 +60,13 @@ class MissionsController extends Controller
             'title' => 'required',
             'desc' => 'required',
             'startedAt' => 'required',
+            'categoryId' => 'required',
+            'personId' =>'required_unless:categoryId,1'
         ],[
             'title.required' => 'يرجى إدخال العنوان',
             'desc.required' => 'يرجى إدخال الموضوع',
             'startedAt.required' => 'يرجى إدخال تاريخ البدء',
+            'personId.required_unless' => 'يرجى تحديد الضابط أو الفرد'
         ]);
 
         if($validator->fails()){
@@ -71,6 +78,10 @@ class MissionsController extends Controller
         $mission->desc          = $request->desc;
         $mission->status        = 'active';
         $mission->started_at    = $request->startedAt;
+        $mission->category_id   = $request->categoryId;
+        if($request->category_id != 1 && isset($request->personId) ){
+            $mission->person_id = $request->personId;
+        }
         $mission->save();
 
         return redirect('mission/'.$mission->id);
@@ -83,11 +94,14 @@ class MissionsController extends Controller
             'title' => 'required',
             'desc' => 'required',
             'startedAt' => 'required',
-            'missionId' => 'required'
+            'missionId' => 'required',
+            'categoryId' => 'required',
+            'personId' =>'required_unless:categoryId,1'
         ],[
             'title.required' => 'يرجى إدخال العنوان',
             'desc.required' => 'يرجى إدخال الموضوع',
             'startedAt.required' => 'يرجى إدخال تاريخ البدء',
+            'personId.required_unless' => 'يرجى تحديد الضابط أو الفرد'
         ]);
 
         if($validator->fails()){
@@ -100,6 +114,10 @@ class MissionsController extends Controller
         $mission->title         = $request->title;
         $mission->desc          = $request->desc;
         $mission->started_at    = $request->startedAt;
+        $mission->category_id   = $request->categoryId;
+        if($request->category_id != 1 && isset($request->personId) ){
+            $mission->person_id = $request->personId;
+        }
         $mission->save();
 
         return back();
@@ -114,7 +132,11 @@ class MissionsController extends Controller
 
     public function showMission(Request $request){
         $mission = Mission::findOrFail($request->id);
+        $categories = Category::all();
         
-        return view('missions.show-mission')->with(['mission' => $mission]);
+        return view('tanzim.show-mission')->with([
+            'mission' => $mission,
+            'categories' => $categories
+        ]);
     }
 }

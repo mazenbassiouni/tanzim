@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MissionsController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\PersonsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,8 @@ Route::post('add/task', [TasksController::class, 'addTask'])->name('add-new-task
 Route::post('edit/task', [TasksController::class, 'editTask'])->name('edit-task');
 Route::post('delete/task', [TasksController::class, 'deleteTask'])->name('delete-task');
 Route::post('done/task', [TasksController::class, 'setTaskAsDone'])->name('task-done');
+
+//Person
+Route::get('force', [PersonsController::class, 'index'])->name('force');
+Route::post('add/person', [PersonsController::class, 'addPerson'])->name('add-new-person');
+Route::get('search/person', [PersonsController::class, 'search'])->name('person-search');

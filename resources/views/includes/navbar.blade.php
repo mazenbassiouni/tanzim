@@ -9,8 +9,8 @@
         <li class="nav-item {{ request()->route()->named('missions') ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('missions') }}">التكاليف</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">قوة</a>
+        <li class="nav-item {{ request()->route()->named('force') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ route('force') }}">قوة</a>
         </li>
         {{-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

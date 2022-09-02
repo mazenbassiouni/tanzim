@@ -55,7 +55,7 @@
                     @csrf
                     <div class="modal-body">                        
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control text-right" name="title" value="{{ old('title') }}">
+                            <input type="text" class="form-control text-right" name="title" value="{{ old('title') }}" id="missionTitle" {{ old('categoryId') && old('categoryId') != 1 ? 'disabled' : '' }}>
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                             </div>
@@ -248,11 +248,13 @@
             if(e.target.value == 1){
                 personSearch.disabled = true;
                 personId.disabled = true;
+                missionTitle.disabled = false;
 
                 personInfo.classList.add('d-none');
             }else{
                 personSearch.disabled = false;
                 personId.disabled = false;
+                missionTitle.disabled = true;
 
                 personInfo.classList.remove('d-none');
             }

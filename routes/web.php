@@ -22,7 +22,7 @@ Route::get('/', [MissionsController::class, 'index'])->name('missions');
 Route::post('add/mission', [MissionsController::class, 'addMission'])->name('add-new-mission');
 Route::post('edit/mission', [MissionsController::class, 'editMission'])->name('edit-mission');
 Route::post('delete/mission', [MissionsController::class, 'deleteMission'])->name('delete-mission');
-Route::get('mission/{id}', [MissionsController::class, 'showMission'])->where('id', '[0-9]+');
+Route::get('mission/{id}', [MissionsController::class, 'showMission'])->where('id', '[0-9]+')->name('show-mission');
 
 //Tasks
 Route::post('add/task', [TasksController::class, 'addTask'])->name('add-new-task');
@@ -34,3 +34,5 @@ Route::post('done/task', [TasksController::class, 'setTaskAsDone'])->name('task-
 Route::get('force', [PersonsController::class, 'index'])->name('force');
 Route::post('add/person', [PersonsController::class, 'addPerson'])->name('add-new-person');
 Route::get('search/person', [PersonsController::class, 'search'])->name('person-search');
+Route::get('person/{id}' , [PersonsController::class, 'showPerson'])->where('id', '[0-9]+')->name('show-person');
+Route::post('edit/person', [PersonsController::class, 'editPerson'])->name('edit-person');

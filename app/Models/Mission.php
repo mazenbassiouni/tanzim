@@ -14,4 +14,12 @@ class Mission extends Model
     public function tasks(){
         return $this->hasMany(Task::class);
     }
+
+    public function person(){
+        return $this->belongsTo(Person::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }

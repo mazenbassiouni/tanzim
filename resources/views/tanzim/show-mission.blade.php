@@ -1,5 +1,18 @@
 @extends('layouts.app')
 
+@section('styles')
+    <style>
+        a.mission{
+            text-decoration: none;
+            color: rgba(255,255,255,.5);
+        }
+
+        a.mission:hover{
+            color: #fff;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="d-flex justify-content-start">
         <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#newTaskModal">
@@ -16,9 +29,13 @@
                 </a>
                 <div>
                     <div class="h5 m-0">
-                        {{ $mission->title }}
+                        @if($mission->category_id == 1)
+                            {{ $mission->title }}
+                        @else
+                            {{ $mission->category->name }} <a class="mission" href="{{ url('person',$mission->person->id) }}">{{ $mission->person->rank->name.'/'.$mission->person->name }}</a>
+                        @endif
                     </div>
-                    <div class="text-light" style="line-height: .9">
+                    <div class="text-light" style="line-height: 1">
                         {{ $mission->desc }} ({{ $mission->started_at->locale('ar')->isoFormat('dddd, DD/MM/OY') }})
                     </div>
                 </div>
@@ -108,7 +125,7 @@
                     <input type="number" name="missionId" value="{{$mission->id}}" hidden>
                     <div class="modal-body">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control text-right" name="title" value="{{ old('title')  && session('error_type') == 'edit mission' ? old('title') : $mission->title }}">
+                            <input type="text" class="form-control text-right" name="title" id="missionTitle" value="{{ old('title')  && session('error_type') == 'edit mission' ? old('title') : $mission->title }}" {{ old('categoryId') !== null && old('categoryId') != 1 ? 'disabled' : (old('categoryId') === null && $mission->category_id != 1 ? 'disabled' : '' ) }}>
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
                             </div>
@@ -131,7 +148,7 @@
                         <div class="input-group mb-3">
                             <select name="categoryId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"  {{ old('categoryId') == $category->id && session('error_type') == 'edit mission' ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}"  {{ old('categoryId') !== null && old('categoryId') == $category->id ? 'selected' : ( old('categoryId') === null && $mission->category_id == $category->id ? 'selected' : '' ) }}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">
@@ -140,7 +157,7 @@
                         </div>
 
                         <div class="input-group mb-3 search-input-group">
-                            <input class="form-control text-right" placeholder="بحث" id="personSearch" {{ old('categoryId') && old('categoryId') != 1 ? '' : 'disabled' }}>
+                            <input class="form-control text-right" placeholder="بحث" id="personSearch" {{ old('categoryId') && old('categoryId') != 1 ? '' : ( old('categoryId') === null && $mission->category_id != 1 ? '' : ' disabled') }}>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                             </div>
@@ -149,20 +166,20 @@
                             </div>
                         </div>
 
-                        <div class="px-3 {{ old('categoryId') && old('categoryId') != 1 ? '' : 'd-none' }}" style="direction: rtl" id="personInfo">
+                        <div class="px-3 {{ old('categoryId') !== null && old('categoryId') != 1 ? '' : ( old('categoryId') === null && $mission->category_id != 1 ? '' : ' d-none') }}" style="direction: rtl" id="personInfo">
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
                                 <span>:</span>
-                                <span id="personRankDisplay">{{ old('personId') ? User::find(old('personId'))->rank->name : '' }}</span>
+                                <span id="personRankDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->rank->name : ( $mission->category_id != 1 ? $mission->person->rank->name : '' ) }}</span>
                             </div>
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">إسم</span>
                                 <span>:</span>
-                                <span id="personNameDisplay">{{ old('personId') ? User::find(old('personId'))->name : '' }}</span>
+                                <span id="personNameDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->name : ( $mission->category_id != 1 ? $mission->person->name : '' ) }}</span>
                             </div>
                         </div>
 
-                        <input name="personId" hidden id="personId" value="{{ old('personId') }}">
+                        <input name="personId" hidden id="personId" value="{{ old('personId') !== null ? old('personId') : ( $mission->category_id != 1 ? $mission->person->id : '' ) }}">
 
                         <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editMissionErrorBag">
                             <ul class="list-unstyled m-0" id="editMissionErrorsList"></ul>
@@ -361,11 +378,13 @@
             if(e.target.value == 1){
                 personSearch.disabled = true;
                 personId.disabled = true;
+                missionTitle.disabled = false;
 
                 personInfo.classList.add('d-none');
             }else{
                 personSearch.disabled = false;
                 personId.disabled = false;
+                missionTitle.disabled = true;
 
                 personInfo.classList.remove('d-none');
             }

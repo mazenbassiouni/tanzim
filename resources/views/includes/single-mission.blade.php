@@ -8,9 +8,15 @@
             @endif
         </div>
         <h5 class="mb-0">
-            <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
-                    <b>{{$mission->title}}</b>
+            <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}" >
+                <button style="text-decoration:none" class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
+                    <b>
+                        @if($mission->category_id == 1)
+                            {{ $mission->title }}
+                        @else
+                            <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                        @endif
+                    </b>
                 </button>
             </a>
         </h5>

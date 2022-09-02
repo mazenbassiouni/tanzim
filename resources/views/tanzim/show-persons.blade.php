@@ -1,11 +1,141 @@
 @extends('layouts.app')
 
+@section('styles')
+    <style>
+        table{
+            direction: rtl;
+            text-align: center;
+        }
+    </style>
+@endsection
+
 @section('content')
-    <div class="d-flex justify-content-start">
+    <div class="d-flex justify-content-between">
         <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#newPersonModal">
             إضافة ضابط/فرد
             <img class="ml-2" height="16" src="{{ asset('/svg/plus.svg') }}" alt="plus">
         </button>
+
+        <div class="d-flex flex-row-reverse font-weight-bold">
+            <div class="ml-5">
+                <span>قوة : <span class="text-primary">{{ $tamam['total'] }}</span></span>
+            </div>
+            <div class="ml-5">
+                <span>ضباط : <span class="text-primary">{{ $tamam['officers'] }}</span></span>
+            </div>
+            <div class="ml-5">
+                <span>ضباط الصف : <span class="text-primary">{{ $tamam['subOfficers'] }}</span></span>
+            </div>
+            <div>
+                <span>جنود : <span class="text-primary">{{ $tamam['soldiers'] }}</span></span>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs flex-row-reverse mt-3" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="officer" data-toggle="tab" href="#officerTab" role="tab" aria-controls="officerTab" aria-selected="true"><b>ضباط</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="subOfficer" data-toggle="tab" href="#subOfficerTab" role="tab" aria-controls="subOfficerTab" aria-selected="false"><b>ضباط الصف</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="soldier" data-toggle="tab" href="#soliderTab" role="tab" aria-controls="soliderTab" aria-selected="false"><b>جنود</b></a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="officerTab" role="tabpanel" aria-labelledby="officer">
+            <table class="table table-striped">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">رتبة</th>
+                        <th scope="col">إسم</th>
+                        <th scope="col">رقم عسكري</th>
+                        <th scope="col">رقم أقدمية</th>
+                        <th scope="col">تخصص</th>
+                        <th scope="col">تسكين</th>
+                        <th scope="col">تسكين داخلي</th>
+                        <th scope="col">ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($officers as $officer)                        
+                        <tr>
+                            <th scope="row">{{$loop->iteration}}</th>
+                            <td>{{ $officer->rank->name }}</td>
+                            <td><a style="text-decoration: none" href="{{ url('person',$officer->id) }}">{{ $officer->name }}</a></td>
+                            <td>{{ $officer->military_num }}</td>
+                            <td>{{ $officer->seniority_num }}</td>
+                            <td>{{ $officer->speciality->name }}</td>
+                            <td>{{ $officer->milUnit->name }}</td>
+                            <td>{{ $officer->Unit->name }}</td>
+                            <td>{{ $officer->note }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+              </table>
+        </div>
+        <div class="tab-pane fade" id="subOfficerTab" role="tabpanel" aria-labelledby="subOfficer">
+            <table class="table table-striped">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">رتبة</th>
+                        <th scope="col">إسم</th>
+                        <th scope="col">رقم عسكري</th>
+                        <th scope="col">تخصص</th>
+                        <th scope="col">تسكين</th>
+                        <th scope="col">تسكين داخلي</th>
+                        <th scope="col">ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($subOfficers as $subOfficer)                        
+                        <tr>
+                            <th scope="row">{{$loop->iteration}}</th>
+                            <td>{{ $subOfficer->rank->name }}</td>
+                            <td><a href="{{ url('person',$subOfficer->id) }}">{{ $subOfficer->name }}</a></td>
+                            <td>{{ $subOfficer->military_num }}</td>
+                            <td>{{ $subOfficer->speciality->name }}</td>
+                            <td>{{ $subOfficer->milUnit->name }}</td>
+                            <td>{{ $subOfficer->Unit->name }}</td>
+                            <td>{{ $subOfficer->note }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="soliderTab" role="tabpanel" aria-labelledby="soldier">
+            <table class="table table-striped">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">رتبة</th>
+                        <th scope="col">إسم</th>
+                        <th scope="col">رقم عسكري</th>
+                        <th scope="col">تخصص</th>
+                        <th scope="col">تسكين</th>
+                        <th scope="col">تسكين داخلي</th>
+                        <th scope="col">ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($soliders as $solider)                        
+                        <tr>
+                            <th scope="row">{{$loop->iteration}}</th>
+                            <td>{{ $solider->rank->name }}</td>
+                            <td><a href="{{ url('person',$solider->id) }}">{{ $solider->name }}</a></td>
+                            <td>{{ $solider->military_num }}</td>
+                            <td>{{ $solider->speciality->name }}</td>
+                            <td>{{ $solider->milUnit->name }}</td>
+                            <td>{{ $solider->Unit->name }}</td>
+                            <td>{{ $solider->note }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+              </table>
+        </div>
     </div>
 
     <div class="modal fade" id="newPersonModal" tabindex="-1" role="dialog" aria-labelledby="new person modal" aria-hidden="true">
@@ -118,7 +248,7 @@
                             </label>
                         </div>
                         <div class="form-check d-flex justify-content-end align-items-center">
-                            <input class="form-check-input" type="radio" name="service" id="notService" value="2" {{ old('service') !== null && old('service') == 0 ?  'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="service" id="notService" value="0" {{ old('service') !== null && old('service') == 0 ?  'checked' : '' }}>
                             <label class="form-check-label text-muted mr-4" for="notService">
                                 معاش
                             </label>

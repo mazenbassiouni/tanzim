@@ -8,7 +8,7 @@
             @endif
         </div>
         <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$task->id}}" aria-expanded="true" aria-controls="collapseOne">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$task->id}}" aria-expanded="true" aria-controls="collapseOne" style="text-decoration:none">
                 {{$task->title}}
             </button>
         </h5>

@@ -57,13 +57,13 @@ class MissionsController extends Controller
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'title' => 'required',
+            'title' => 'required_if:category_id,1',
             'desc' => 'required',
             'startedAt' => 'required',
             'categoryId' => 'required',
             'personId' =>'required_unless:categoryId,1'
         ],[
-            'title.required' => 'يرجى إدخال العنوان',
+            'title.required_if' => 'يرجى إدخال العنوان',
             'desc.required' => 'يرجى إدخال الموضوع',
             'startedAt.required' => 'يرجى إدخال تاريخ البدء',
             'personId.required_unless' => 'يرجى تحديد الضابط أو الفرد'
@@ -91,7 +91,7 @@ class MissionsController extends Controller
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'title' => 'required',
+            'title' => 'required_if:category_id,1',
             'desc' => 'required',
             'startedAt' => 'required',
             'missionId' => 'required',
@@ -111,7 +111,9 @@ class MissionsController extends Controller
 
         $mission = Mission::findOrFail($request->missionId);
 
-        $mission->title         = $request->title;
+        if($request->categoryId != 1 && isset($request->personId) ){
+            $mission->title = '';
+        }
         $mission->desc          = $request->desc;
         $mission->started_at    = $request->startedAt;
         $mission->category_id   = $request->categoryId;

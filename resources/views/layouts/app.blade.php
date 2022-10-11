@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Tanzim L2</title>
+        <link href="{{ asset('img/tab-logo.png') }}" rel="icon">
 
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/custom.css') }}">

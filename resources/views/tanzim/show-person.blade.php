@@ -41,7 +41,7 @@
                             <select name="rankId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 <option value=""></option>
                                 @foreach ($ranks as $rank)
-                                    <option value="{{ $rank->id }}"  {{ old('rankId') === null && $person->rank_id == $rank->id ? 'selected' : (old('rankId') == $rank->id) ? 'selected' : '' }}>{{ $rank->name }}</option>
+                                    <option value="{{ $rank->id }}"  {{ old('rankId') === null && $person->rank_id == $rank->id ? 'selected' : (old('rankId') == $rank->id ? 'selected' : '') }}>{{ $rank->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">
@@ -74,7 +74,7 @@
                             <select name="specialityId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 <option value=""></option>
                                 @foreach ($specialities as $speciality)
-                                    <option value="{{ $speciality->id }}"  {{ old('specialityId') === null && $person->speciality_id == $speciality->id ? 'selected' : (old('specialityId') == $speciality->id) ? 'selected' : '' }}>{{ $speciality->name }}</option>
+                                    <option value="{{ $speciality->id }}"  {{ old('specialityId') === null && $person->speciality_id == $speciality->id ? 'selected' : (old('specialityId') == $speciality->id ? 'selected' : '') }}>{{ $speciality->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">

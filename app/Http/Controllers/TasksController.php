@@ -46,7 +46,7 @@ class TasksController extends Controller
 
         $validator = Validator::make($input, [
             'title' => 'required',
-            'desc' => 'required',
+            // 'desc' => 'required',
             'dueTo' => 'required_if:status,active',
             'taskId' => 'required'
         ],[

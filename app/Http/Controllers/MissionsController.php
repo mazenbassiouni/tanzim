@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use App\Models\Task;
 use App\Models\Category;
+use App\Models\CategoryTasks;
 use Illuminate\Support\Facades\Validator;
 
 class MissionsController extends Controller
@@ -83,6 +85,17 @@ class MissionsController extends Controller
             $mission->person_id = $request->personId;
         }
         $mission->save();
+
+        $extraTasks = CategoryTasks::whereCategoryId($mission->category_id)->orderBy('order')->get();
+
+        foreach($extraTasks as $extraTask){
+            $task                   = new Task();
+            $task->mission_id       = $mission->id;
+            $task->title            = $extraTask->title;
+            $task->desc            = $extraTask->desc;
+            $task->status           = $extraTask->status;
+            $task->save();
+        }
 
         return redirect('mission/'.$mission->id);
     }

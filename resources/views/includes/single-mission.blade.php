@@ -14,7 +14,11 @@
                         @if($mission->category_id == 1)
                             {{ $mission->title }}
                         @else
-                            <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                            @if(request()->route()->named('missions'))
+                                <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                            @else
+                                {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                            @endif
                         @endif
                     </b>
                 </button>

@@ -141,7 +141,9 @@ class MissionsController extends Controller
     public function deleteMission(Request $request){
         $mission = Mission::findOrFail($request->missionId);
         $mission->delete();
-
+        if($request->headers->get('referer') == url('mission',$mission->id)){
+            return redirect('/');
+        }
         return back();
     }
 
@@ -151,6 +153,31 @@ class MissionsController extends Controller
         
         return view('tanzim.show-mission')->with([
             'mission' => $mission,
+            'categories' => $categories
+        ]);
+    }
+
+    public function showCouncils(Request $request){
+        $sickCouncils = Mission::where('category_id', 3)->orderby('started_at', 'DESC')->get();
+
+        $injuryCouncils = Mission::where('category_id', 9)->orderby('started_at', 'DESC')->get();
+
+        $categories = Category::all();
+
+        return view('tanzim.show-councils')->with([
+            'sickCouncils' => $sickCouncils,
+            'injuryCouncils' => $injuryCouncils,
+            'categories' => $categories
+        ]);
+    }
+
+    public function showInjuries(Request $request){
+        $injuries = Mission::where('category_id', 2)->orderby('started_at', 'DESC')->get();
+
+        $categories = Category::all();
+
+        return view('tanzim.show-injuries')->with([
+            'injuries' => $injuries,
             'categories' => $categories
         ]);
     }

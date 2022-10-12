@@ -24,9 +24,12 @@
     <div class="card text-right  my-5">
         <div class="card-header text-white bg-primary">
             <div class="d-flex align-items-center justify-content-between">
-                <a href="#" class="p-1" data-toggle="modal" data-target="#editMissionModal">
-                    <img height="20" src="{{ asset('svg/white-pencil.svg') }}" alt="">
-                </a>
+                <div>
+                    <a href="#" data-toggle="modal" data-target="#deleteMission{{$mission->id}}" class="p-2"><img height="17" src="{{ asset('svg/white-trash.svg') }}" alt=""></a>
+                    <a href="#" class="p-1" data-toggle="modal" data-target="#editMissionModal">
+                        <img height="20" src="{{ asset('svg/white-pencil.svg') }}" alt="">
+                    </a>
+                </div>
                 <div>
                     <div class="h5 m-0">
                         @if($mission->category_id == 1)
@@ -188,6 +191,30 @@
                     <div class="modal-footer justify-content-start">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
                         <button class="btn btn-primary">تعديل</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteMission{{$mission->id}}" tabindex="-1" role="dialog" aria-labelledby="delete mission modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header flex-row-reverse">
+                    <h5 class="modal-title" id="exampleModalLongTitle">حذف تكليف</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    تأكيد حذف التكليف
+                </div>
+                <form action="{{ route('delete-mission') }}" method="POST">
+                    @csrf
+                    <input type="number" value="{{$mission->id}}" name="missionId" hidden>
+                    <div class="modal-footer justify-content-start">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                        <button class="btn btn-primary">حذف</button>
                     </div>
                 </form>
             </div>

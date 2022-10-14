@@ -14,7 +14,7 @@ class MissionsController extends Controller
     public function index(){
         $activeMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
                     ->where('tasks.status', 'active')
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
+                    ->groupBy('missions.id')
                     ->select('missions.*')
                     ->selectRaw('MIN(tasks.due_to) as due_date')
                     ->orderBy('due_date')
@@ -22,13 +22,19 @@ class MissionsController extends Controller
 
         $pendingMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
                     ->where('tasks.status', 'pending')
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
+                    ->where(function($query){
+                        $query->where('category_id','<>', 15)
+                            ->where('category_id','<>', 17)
+                            ->where('category_id','<>', 18);
+                    })
+                    ->groupBy('missions.id')
                     ->select('missions.*')
                     ->selectRaw('MIN(tasks.due_to) as due_date')
                     ->orderBy('tasks.created_at')
                     ->get();
 
         $doneMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                    ->where('category_id', 1)
                     ->whereNotExists(function($query){
                         $query->selectRaw(1)
                             ->from('tasks')
@@ -38,7 +44,7 @@ class MissionsController extends Controller
                                     ->orWhere('tasks.status', 'active');
                             });
                     })
-                    ->groupBy('missions.id', 'missions.title', 'missions.desc', 'missions.status', 'missions.started_at', 'missions.created_at', 'missions.updated_at', 'missions.person_id', 'missions.category_id')
+                    ->groupBy('missions.id')
                     ->select('missions.*')
                     ->selectRaw('MAX(tasks.due_to) as due_date')
                     ->orderBy('due_date')
@@ -60,7 +66,7 @@ class MissionsController extends Controller
 
         $validator = Validator::make($input, [
             'title' => 'required_if:category_id,1',
-            'desc' => 'required',
+            // 'desc' => 'required',
             'startedAt' => 'required',
             'categoryId' => 'required',
             'personId' =>'required_unless:categoryId,1'
@@ -105,7 +111,7 @@ class MissionsController extends Controller
 
         $validator = Validator::make($input, [
             'title' => 'required_if:category_id,1',
-            'desc' => 'required',
+            // 'desc' => 'required',
             'startedAt' => 'required',
             'missionId' => 'required',
             'categoryId' => 'required',
@@ -178,6 +184,45 @@ class MissionsController extends Controller
 
         return view('tanzim.show-injuries')->with([
             'injuries' => $injuries,
+            'categories' => $categories
+        ]);
+    }
+
+    public function showMedicalCards(Request $request){
+        $familyCards = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                        ->where('tasks.status', 'active')
+                        ->where('category_id', 15)
+                        ->groupBy('missions.id')
+                        ->select('missions.*')
+                        ->selectRaw('MIN(tasks.due_to) as due_date')
+                        ->orderBy('due_date')
+                        ->get();
+
+        $parentCards = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
+                        ->where('tasks.status', 'active')
+                        ->where('category_id', 17)
+                        ->groupBy('missions.id')
+                        ->select('missions.*')
+                        ->selectRaw('MIN(tasks.due_to) as due_date')
+                        ->orderBy('due_date')
+                        ->get();
+
+        $categories = Category::all();
+
+        return view('tanzim.show-cards')->with([
+            'familyCards' => $familyCards,
+            'parentCards' => $parentCards,
+            'categories' => $categories
+        ]);
+    }
+    
+    public function showSquads(Request $request){
+        $squads = Mission::where('category_id', 18)->orderby('started_at', 'DESC')->get();
+        
+        $categories = Category::all();
+        
+        return view('tanzim.show-squads')->with([
+            'squads' => $squads,
             'categories' => $categories
         ]);
     }

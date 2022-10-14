@@ -25,6 +25,8 @@ Route::post('delete/mission', [MissionsController::class, 'deleteMission'])->nam
 Route::get('mission/{id}', [MissionsController::class, 'showMission'])->where('id', '[0-9]+')->name('show-mission');
 Route::get('councils', [MissionsController::class, 'showCouncils'])->name('councils');
 Route::get('injuries', [MissionsController::class, 'showInjuries'])->name('injuries');
+Route::get('squads', [MissionsController::class, 'showSquads'])->name('squads');
+Route::get('cards', [MissionsController::class, 'showMedicalCards'])->name('cards');
 
 //Tasks
 Route::post('add/task', [TasksController::class, 'addTask'])->name('add-new-task');

@@ -1,9 +1,9 @@
 <div class="card {{$loop->first ? 'mb-3' : ($loop->last? 'mt-3' : 'my-3')}}">
     <div class="card-header py-1 d-flex justify-content-between align-items-center">
         <div>
-            <a href="#" data-toggle="modal" data-target="#deleteMission{{$mission->id}}" class="p-2"><img height="15" src="{{ asset('svg/trash.svg') }}" alt=""></a>
+            <a href="#" data-toggle="modal" data-target="#deleteMission{{$mission->id}}" class="p-2"><img height="20" src="{{ asset('svg/trash.svg') }}" alt=""></a>
             <a href="{{ url('mission', $mission->id) }}" class="p-2 ml-1 mr-5"><img height="15" src="{{ asset('svg/eye.svg') }}" alt=""></a>
-            @if($status == 'active' )
+            @if($status == 'active' || $status == 'family' || $status == 'parent' )
                 {{ Carbon::create($mission->due_date)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
             @endif
         </div>
@@ -14,8 +14,10 @@
                         @if($mission->category_id == 1)
                             {{ $mission->title }}
                         @else
-                            @if(request()->route()->named('missions'))
+                            @if(request()->route()->named('missions') )
                                 <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                            @elseif(request()->route()->named('show-person'))
+                                {{ $mission->category->name }}
                             @else
                                 {{ $mission->person->rank->name.'/'.$mission->person->name }}
                             @endif

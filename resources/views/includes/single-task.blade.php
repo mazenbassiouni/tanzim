@@ -5,6 +5,8 @@
             <a href="#" data-toggle="modal" data-target="#editTask{{$task->id}}" class="p-2 ml-1 mr-5" ><img height="15" src="{{ asset('svg/grey-pencil.svg') }}" alt=""></a>
             @if($task->status == 'active' )
                 {{ Carbon::create($task->due_to)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
+            @elseif($task->status == 'done')
+                {{ Carbon::create($task->done_at)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
             @endif
         </div>
         <h5 class="mb-0">

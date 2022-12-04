@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Mission;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
@@ -86,6 +87,7 @@ class TasksController extends Controller
         $task = Task::findOrFail($request->taskId);
         
         $task->status = 'done';
+        $task->done_at = Carbon::now();
         $task->save();
 
         return back();

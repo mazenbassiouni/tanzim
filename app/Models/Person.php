@@ -9,6 +9,8 @@ class Person extends Model
 {    
     use HasFactory;
 
+    protected $dates = ['created_at', 'updated_at', 'lay_off_date', 'join_date', 'deleted_date'];
+
     public function rank(){
         return $this->belongsTo(Rank::class);
     }

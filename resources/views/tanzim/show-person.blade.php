@@ -38,35 +38,35 @@
 
                     <div class="modal-body"> 
                         <div class="input-group mb-3">
-                            <select name="rankId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
+                            <select id="rankId" name="rankId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 <option value=""></option>
                                 @foreach ($ranks as $rank)
                                     <option value="{{ $rank->id }}"  {{ old('rankId') === null && $person->rank_id == $rank->id ? 'selected' : (old('rankId') == $rank->id ? 'selected' : '') }}>{{ $rank->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">رتبة/درجة</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">رتبة/درجة</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
                             <input type="text" class="form-control text-right" name="name" value="{{ old('name')?? $person->name }}">
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">الإسم</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">الإسم</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
                             <input class="form-control text-right" name="militaryNum" value="{{ old('militaryNum')?? $person->military_num }}">
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">رقم عسكري</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">رقم عسكري</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
                             <input class="form-control text-right" name="seniorityNum" value="{{ old('seniorityNum')?? $person->seniority_num }}">
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">رقم أقدمية</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">رقم أقدمية</span>
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                                 @endforeach
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">النخصص</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">النخصص</span>
                             </div>
                         </div>
 
@@ -86,11 +86,11 @@
                             <select name="milUnitId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 <option value=""></option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}"  {{ old('milUnitId') === null && $person->mil_unit_id == $unit->id ? 'selected' : (old('milUnitId') == $unit->id) ? 'selected' : '' }}>{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}"  {{ old('milUnitId') === null && $person->mil_unit_id == $unit->id ? 'selected' : ((old('milUnitId') == $unit->id) ? 'selected' : '') }}>{{ $unit->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">تسكين</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">تسكين</span>
                             </div>
                         </div>
 
@@ -98,36 +98,90 @@
                             <select name="unitId" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
                                 <option value=""></option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id }}"  {{ old('unitId') === null && $person->unit_id == $unit->id ? 'selected' : (old('unitId') == $unit->id) ? 'selected' : '' }}>{{ $unit->name }}</option>
+                                    <option value="{{ $unit->id }}"  {{ old('unitId') === null && $person->unit_id == $unit->id ? 'selected' : ((old('unitId') == $unit->id) ? 'selected' : '') }}>{{ $unit->name }}</option>
                                 @endforeach
                             </select>
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">تسكين داخلي</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">تسكين داخلي</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <select name="medicalState" class="form-select form-control text-right" aria-label="Default select example" style="direction: rtl">
+                                <option value="1"  {{ old('medicalState') === null && $person->medical_state == 1 ? 'selected' : (old('medicalState') == "1" ? 'selected' : '') }}>لائق</option>
+                                <option value="0"  {{ old('medicalState') === null && $person->medical_state == 0 ? 'selected' : (old('medicalState') == "0" ? 'selected' : '') }}>غير لائق</option>
+                                <option value="2"  {{ old('medicalState') === null && $person->medical_state == 2 ? 'selected' : (old('medicalState') == "2" ? 'selected' : '') }}>لائق مستوى ادنى</option>
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 7rem">الموقف الطبي</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input id="medicalCause" type="text" class="form-control text-right" name="medicalCause" value="{{ old('medicalCause') ?? $person->medical_cause  }}" {{ old('medicalState') === null && $person->medical_state ==  1 ? 'disabled' : ( old('medicalState') == 1 ? 'disabled' : '' ) }}>
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 7rem">السبب</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input id="layOffDate" type="date" class="form-control text-right" name="layOffDate" value="{{ old('layOffDate') ?? ($person->lay_off_date ? $person->lay_off_date->format('Y-m-d') : '')  }}" {{ old('rankId') === null ? ($person->rank_id != 27 ? 'disabled' : '') : ( old('rankId') != 27 ? 'disabled' : '' )  }}>
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="width: 7rem">تاريخ التسريح</span>
                             </div>
                         </div>
 
                         <div class="input-group mb-3">
                             <input type="text" class="form-control text-right" name="note" value="{{ old('note')?? $person->note }}">
                             <div class="input-group-append">
-                                <span class="input-group-text justify-content-center" style="width: 5.5rem">ملاحظات</span>
+                                <span class="input-group-text justify-content-center" style="width: 7rem">ملاحظات عامة</span>
                             </div>
                         </div>
 
-                        <div class="text-right">على القوة</div>
-                        <div class="form-check d-flex justify-content-end align-items-center">
-                            <input class="form-check-input" type="radio" name="isForce" id="active" value="1" {{ old('isForce') === null && $person->is_force == 1 ? 'checked' : (old('isForce') == 1  ?  'checked' : '') }}>
-                            <label class="form-check-label text-muted mr-4" for="active">
-                                نعم
-                            </label>
+                        <div class="text-right mb-1">بيانات الضم</div>
+                        <div class="input-group mb-3">
+                            <input type="date" class="form-control text-right" name="joinDate" value="{{ old('joinDate') ?? ($person->join_date ? $person->join_date->format('Y-m-d') : '')  }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="width: 7rem">تاريخ الضم</span>
+                            </div>
                         </div>
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-right" name="joinDesc" value="{{ old('join_desc')?? $person->join_desc }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 7rem">ملاحظات</span>
+                            </div>
+                        </div>
+
+                        <div class="text-right">تم الشطب</div>
                         <div class="form-check d-flex justify-content-end align-items-center">
                             <input class="form-check-input" type="radio" name="isForce" id="notActive" value="0" {{ old('isForce') === null && $person->is_force == 0 ? 'checked' : (old('isForce') !== null && old('isForce') == 0  ?  'checked' : '') }}>
                             <label class="form-check-label text-muted mr-4" for="notActive">
+                                نعم                            </label>
+                        </div>
+                        <div class="form-check d-flex justify-content-end align-items-center">
+                            <input class="form-check-input" type="radio" name="isForce" id="active" value="1" {{ old('isForce') === null && $person->is_force == 1 ? 'checked' : (old('isForce') == 1  ?  'checked' : '') }}>
+                            <label class="form-check-label text-muted mr-4" for="active">
                                 لا
                             </label>
                         </div>
 
-                        <div class="text-right">موقف الخدمة</div>
+                        <div class="text-right mb-1">بيانات الشطب</div>
+                        <div class="input-group mb-3">
+                            <input type="date" class="form-control text-right" id="deletedDate" name="deletedDate" value="{{ old('deletedDate')?? ($person->deleted_date ? $person->deleted_date->format('Y-m-d') : '')  }}" {{ old('isForce') === null && $person->is_force == 1 ? 'disabled' : (old('isForce') == 1  ?  'disabled' : '') }}>
+                            <div class="input-group-append">
+                                <span class="input-group-text" style="width: 7rem">تاريخ الشطب</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-right" id="deletedDesc" name="deletedDesc" value="{{ old('deletedDesc')?? $person->deleted_desc }}" {{ old('isForce') === null && $person->is_force == 1 ? 'disabled' : (old('isForce') == 1  ?  'disabled' : '') }}>
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 7rem">ملاحظات</span>
+                            </div>
+                        </div>
+
+                        {{-- <div class="text-right">موقف الخدمة</div>
                         <div class="form-check d-flex justify-content-end align-items-center">
                             <input class="form-check-input" type="radio" name="service" id="Service" value="1" {{ old('service') === null && $person->service == 1 ? 'checked' : (old('service') == 1  ?  'checked' : '') }}>
                             <label class="form-check-label text-muted mr-4" for="Service">
@@ -139,7 +193,7 @@
                             <label class="form-check-label text-muted mr-4" for="notService">
                                 معاش
                             </label>
-                        </div>
+                        </div> --}}
 
                         <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editPersonErrorBag">
                             <ul class="list-unstyled m-0" id="editPersonErrorsList"></ul>
@@ -174,4 +228,34 @@
             })
         </script>
     @endif
+
+    <script>
+        document.querySelectorAll('input[name="isForce"]').forEach( $item =>{
+            $item.addEventListener('change', e=>{
+                if(e.target.value == 1){
+                    deletedDesc.disabled = true;
+                    deletedDate.disabled = true;
+                }else{
+                    deletedDesc.disabled = false;
+                    deletedDate.disabled = false;
+                }
+            })
+        })
+
+        document.querySelector('#rankId').addEventListener('change', e=>{
+            if(e.target.value == 27){
+                    layOffDate.disabled = false;
+                }else{
+                    layOffDate.disabled = true;
+                }
+        })
+
+        document.querySelector('select[name="medicalState"]').addEventListener('change', e=>{
+            if(e.target.value == 1){
+                    medicalCause.disabled = true;
+                }else{
+                    medicalCause.disabled = false;
+                }
+        })
+    </script>
 @endsection

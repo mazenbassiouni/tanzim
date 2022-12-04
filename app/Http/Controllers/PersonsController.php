@@ -78,10 +78,15 @@ class PersonsController extends Controller
             'militaryNum' => 'required|integer',
             'seniorityNum' => 'isOfficer',
             'specialityId' => 'required|integer',
-            'service' => 'required|integer',
+            // 'service' => 'required|integer',
             'isForce' => 'required|integer',
             'milUnitId' => 'required|integer',
             'unitId' => 'required|integer',
+            // 'joinDate' => 'required',
+            'layOffDate' => 'required_if:rankId,27',
+            'medicalState' => 'required',
+            'deletedDate' => 'required_if:isForce,0',
+
         ],[
             'name.required' => 'يرجي إدخال الإسم',
             'rankId.required' => 'يرجي إدخال الرتبة/درجة',
@@ -91,23 +96,34 @@ class PersonsController extends Controller
             'isForce.required' => 'يرجي تحديد موقف القوة',
             'milUnitId.required' => 'يرجي إدخال التسكين',
             'unitId.required' => 'يرجي إدخال التسكين الداخلي',
+            'joinDate.required' => 'يرجي إدخال تاريخ الضم',
+            'medicalState.required' => 'يرجي إدخال الموقف الطبي',
+            'layOffDate.required_if' => 'يرجي إدخال تاريخ التسريح',
+            'deletedDate.required_if' => 'يرجي إدخال تاريخ الشطب',
         ]);
 
         if($validator->fails()){
             return back()->withErrors($validator)->withInput();
         }
 
-        $person                 = new Person();
-        $person->name           = $request->name;
-        $person->rank_id        = $request->rankId;
-        $person->military_num   = $request->militaryNum;
-        $person->seniority_num  = $request->seniorityNum;
-        $person->speciality_id  = $request->specialityId;
-        $person->service        = $request->service;
-        $person->is_force       = $request->isForce;
-        $person->mil_unit_id    = $request->milUnitId;
-        $person->unit_id        = $request->unitId;
-        $person->note           = $request->note ?? '';
+        $person                     = new Person();
+        $person->name               = $request->name;
+        $person->rank_id            = $request->rankId;
+        $person->military_num       = $request->militaryNum;
+        $person->seniority_num      = $request->seniorityNum;
+        $person->speciality_id      = $request->specialityId;
+        // $person->service            = $request->service;
+        $person->is_force           = $request->isForce;
+        $person->join_desc          = $request->joinDesc ?? '';
+        $person->mil_unit_id        = $request->milUnitId;
+        $person->unit_id            = $request->unitId;
+        $person->note               = $request->note ?? '';
+        $person->join_date          = $request->joinDate;
+        $person->deleted_desc       = $request->deletedDesc ?? '';
+        $person->deleted_date       = $request->deletedDate;
+        $person->lay_off_date       = $request->layOffDate;
+        $person->medical_state      = $request->medicalState;
+        $person->medical_cause      = $request->medicalCause;
         $person->save();
 
         return back();
@@ -150,10 +166,14 @@ class PersonsController extends Controller
             'militaryNum' => 'required|integer',
             'seniorityNum' => 'isOfficer',
             'specialityId' => 'required|integer',
-            'service' => 'required|integer',
+            // 'service' => 'required|integer',
             'isForce' => 'required|integer',
             'milUnitId' => 'required|integer',
             'unitId' => 'required|integer',
+            // 'joinDate' => 'required',
+            'layOffDate' => 'required_if:rankId,27',
+            'medicalState' => 'required',
+            'deletedDate' => 'required_if:isForce,0',
         ],[
             'name.required' => 'يرجي إدخال الإسم',
             'rankId.required' => 'يرجي إدخال الرتبة/درجة',
@@ -163,6 +183,10 @@ class PersonsController extends Controller
             'isForce.required' => 'يرجي تحديد موقف القوة',
             'milUnitId.required' => 'يرجي إدخال التسكين',
             'unitId.required' => 'يرجي إدخال التسكين الداخلي',
+            'joinDate.required' => 'يرجي إدخال تاريخ الضم',
+            'medicalState.required' => 'يرجي إدخال الموقف الطبي',
+            'layOffDate.required_if' => 'يرجي إدخال تاريخ التسريح',
+            'deletedDate.required_if' => 'يرجي إدخال تاريخ الشطب',
         ]);
 
         if($validator->fails()){
@@ -170,16 +194,23 @@ class PersonsController extends Controller
         }
 
         $person = Person::findOrFail($request->personId);
-        $person->name           = $request->name;
-        $person->rank_id        = $request->rankId;
-        $person->military_num   = $request->militaryNum;
-        $person->seniority_num  = $request->seniorityNum;
-        $person->speciality_id  = $request->specialityId;
-        $person->service        = $request->service;
-        $person->is_force       = $request->isForce;
-        $person->mil_unit_id    = $request->milUnitId;
-        $person->unit_id        = $request->unitId;
-        $person->note           = $request->note ?? '';
+        $person->name               = $request->name;
+        $person->rank_id            = $request->rankId;
+        $person->military_num       = $request->militaryNum;
+        $person->seniority_num      = $request->seniorityNum;
+        $person->speciality_id      = $request->specialityId;
+        // $person->service            = $request->service;
+        $person->is_force           = $request->isForce;
+        $person->join_desc          = $request->joinDesc ?? '';
+        $person->mil_unit_id        = $request->milUnitId;
+        $person->unit_id            = $request->unitId;
+        $person->note               = $request->note ?? '';
+        $person->join_date          = $request->joinDate;
+        $person->deleted_desc       = $request->deletedDesc ?? '';
+        $person->deleted_date       = $request->deletedDate;
+        $person->lay_off_date       = $request->layOffDate;
+        $person->medical_state      = $request->medicalState;
+        $person->medical_cause      = $request->medicalCause;
         $person->save();
 
         return back();

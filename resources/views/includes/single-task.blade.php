@@ -6,7 +6,7 @@
             @if($task->status == 'active' )
                 {{ Carbon::create($task->due_to)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
             @elseif($task->status == 'done')
-                {{ Carbon::create($task->done_at)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
+                {{ $task->done_at ? Carbon::create($task->done_at)->locale('ar')->isoFormat('dddd, DD/MM/OY') : '' }}
             @endif
         </div>
         <h5 class="mb-0">

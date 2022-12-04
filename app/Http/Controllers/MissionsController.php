@@ -168,11 +168,14 @@ class MissionsController extends Controller
 
         $injuryCouncils = Mission::where('category_id', 9)->orderby('started_at', 'DESC')->get();
 
+        $surgeryApprovals = Mission::where('category_id', 11)->orderby('started_at', 'DESC')->get();
+
         $categories = Category::all();
 
         return view('tanzim.show-councils')->with([
             'sickCouncils' => $sickCouncils,
             'injuryCouncils' => $injuryCouncils,
+            'surgeryApprovals' => $surgeryApprovals,
             'categories' => $categories
         ]);
     }

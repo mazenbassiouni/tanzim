@@ -234,7 +234,7 @@
                         </div>
 
                         <div class="input-group mb-3">
-                            <input id="medicalCause" type="text" class="form-control text-right" name="medicalCause" value="{{ old('medicalCause') }}" {{ old('medicalState') == 1 ? 'disabled' : '' }}>
+                            <input id="medicalCause" type="text" class="form-control text-right" name="medicalCause" value="{{ old('medicalCause') }}" {{ old('medicalState') == 1 ? 'disabled' : ( old('medicalState') === null ? 'disabled' : '' ) }}>
                             <div class="input-group-append">
                                 <span class="input-group-text justify-content-center" style="width: 7rem">السبب</span>
                             </div>

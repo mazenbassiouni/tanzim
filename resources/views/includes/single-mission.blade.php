@@ -12,7 +12,11 @@
                 <button style="text-decoration:none" class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
                     <b>
                         @if($mission->category_id == 1)
-                            {{ $mission->title }}
+                            @if ( !request()->route()->named('show-person') && $mission->person_id )
+                                <span class="text-dark">{{ $mission->title }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}
+                            @else
+                                {{ $mission->title }}
+                            @endif
                         @else
                             @if(request()->route()->named('missions') )
                                 <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ $mission->person->rank->name.'/'.$mission->person->name }}

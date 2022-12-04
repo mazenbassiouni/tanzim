@@ -15,6 +15,9 @@
         <li class="nav-item">
           <a class="nav-link" id="sick" data-toggle="tab" href="#sickTab" role="tab" aria-controls="sickTab" aria-selected="false"><b>مرضي</b></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="surgery" data-toggle="tab" href="#surgeryTab" role="tab" aria-controls="surgeryTab" aria-selected="false"><b>تدخل جراحي</b></a>
+          </li>
     </ul>
 
     <div class="tab-content" id="myTabContent">
@@ -30,6 +33,14 @@
             <div class="card-body" id="sickMissionsAccordion">
                 @foreach ($sickCouncils as $mission)
                     @include('includes.single-mission', ['status' => 'sick'])
+                @endforeach
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="surgeryTab" role="tabpanel" aria-labelledby="surgery">
+            <div class="card-body" id="surgeryMissionsAccordion">
+                @foreach ($surgeryApprovals as $mission)
+                    @include('includes.single-mission', ['status' => 'surgery'])
                 @endforeach
             </div>
         </div>

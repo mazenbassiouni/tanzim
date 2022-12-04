@@ -160,7 +160,7 @@
                         </div>
 
                         <div class="input-group mb-3 search-input-group">
-                            <input class="form-control text-right" placeholder="بحث" id="personSearch" {{ old('categoryId') && old('categoryId') != 1 ? '' : ( old('categoryId') === null && $mission->category_id != 1 ? '' : ' disabled') }}>
+                            <input class="form-control text-right" placeholder="بحث" id="personSearch">
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                             </div>
@@ -169,7 +169,7 @@
                             </div>
                         </div>
 
-                        <div class="px-3 {{ old('categoryId') !== null && old('categoryId') != 1 ? '' : ( old('categoryId') === null && $mission->category_id != 1 ? '' : ' d-none') }}" style="direction: rtl" id="personInfo">
+                        <div class="px-3" style="direction: rtl" id="personInfo">
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
                                 <span>:</span>
@@ -403,17 +403,17 @@
 
         document.querySelector('#editMissionModal select[name="categoryId"]').addEventListener('change', e=>{
             if(e.target.value == 1){
-                personSearch.disabled = true;
-                personId.disabled = true;
+                // personSearch.disabled = true;
+                // personId.disabled = true;
                 missionTitle.disabled = false;
 
-                personInfo.classList.add('d-none');
+                // personInfo.classList.add('d-none');
             }else{
-                personSearch.disabled = false;
-                personId.disabled = false;
+                // personSearch.disabled = false;
+                // personId.disabled = false;
                 missionTitle.disabled = true;
 
-                personInfo.classList.remove('d-none');
+                // personInfo.classList.remove('d-none');
             }
         })
     </script>

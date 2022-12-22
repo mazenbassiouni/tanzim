@@ -55,7 +55,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header flex-row-reverse">
-                    <h5 class="modal-title" id="exampleModalLongTitle">بند جديد</h5>
+                    <h5 class="modal-title">بند جديد</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -118,7 +118,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header flex-row-reverse">
-                    <h5 class="modal-title" id="exampleModalLongTitle">تعديل تكليف</h5>
+                    <h5 class="modal-title">تعديل تكليف</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -201,7 +201,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header flex-row-reverse">
-                    <h5 class="modal-title" id="exampleModalLongTitle">حذف تكليف</h5>
+                    <h5 class="modal-title">حذف تكليف</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
                         <span aria-hidden="true">&times;</span>
                     </button>

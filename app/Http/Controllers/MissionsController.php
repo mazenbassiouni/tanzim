@@ -27,6 +27,12 @@ class MissionsController extends Controller
                             ->where('category_id','<>', 17)
                             ->where('category_id','<>', 18);
                     })
+                    ->whereNotExists(function($query){
+                        $query->selectRaw(1)
+                            ->from('tasks')
+                            ->whereColumn('tasks.mission_id', '=', 'missions.id')
+                            ->where('tasks.status', 'active');
+                    })
                     ->groupBy('missions.id')
                     ->select('missions.*')
                     ->selectRaw('MIN(tasks.due_to) as due_date')
@@ -132,6 +138,8 @@ class MissionsController extends Controller
 
         if($request->categoryId != 1 && isset($request->personId) ){
             $mission->title = '';
+        }else{
+            $mission->title = $request->title;
         }
         $mission->desc          = $request->desc;
         $mission->started_at    = $request->startedAt;
@@ -229,4 +237,27 @@ class MissionsController extends Controller
             'categories' => $categories
         ]);
     }
+
+    public function showEndServices(Request $request){
+        $end_services = Mission::where('category_id', 10)->orderby('started_at', 'DESC')->get();
+        
+        $categories = Category::all();
+        
+        return view('tanzim.end-service')->with([
+            'end_services' => $end_services,
+            'categories' => $categories
+        ]);
+    }
+
+    public function showInvestigations(Request $request){
+        $investigations = Mission::where('category_id', 7)->orderby('started_at', 'DESC')->get();
+        
+        $categories = Category::all();
+        
+        return view('tanzim.investigations')->with([
+            'investigations' => $investigations,
+            'categories' => $categories
+        ]);
+    }
+    
 }

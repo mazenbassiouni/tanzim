@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="card-body">
-            @foreach ($person->missions as $mission)
+            @foreach ($person->missions->sortBy('started_at') as $mission)
                 @include('includes.single-mission', ['status' => ''])
             @endforeach
         </div>

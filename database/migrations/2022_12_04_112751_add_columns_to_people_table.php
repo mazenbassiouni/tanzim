@@ -19,7 +19,7 @@ class AddColumnsToPeopleTable extends Migration
             $table->string('deleted_desc');
             $table->timestamp('deleted_date')->nullable()->default(null);
             $table->unsignedSmallInteger('medical_state')->default(1);
-            $table->string('medical_cause');
+            $table->string('medical_cause')->nullable();
             $table->timestamp('lay_off_date')->nullable()->default(null);
         });
     }

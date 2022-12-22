@@ -8,38 +8,12 @@
         </button>
     </div>
 
-    <div class="card text-right my-5">
-        <div class="card-header h5 text-white bg-primary">
-            التكاليف الجارية
-        </div>
-        <div class="card-body" id="activeMissionsAccordion">
-            @foreach ($activeMissions as $mission)
-                @include('includes.single-mission', ['status' => 'active'])
-            @endforeach
-        </div>
+    <div class="my-4" id="injuryMissionsAccordion">
+        @foreach ($end_services as $mission)
+            @include('includes.single-mission', ['status' => 'injury'])
+        @endforeach
     </div>
 
-    <div class="card text-right my-5">
-        <div class="card-header h5 text-white bg-primary">
-            التكاليف المعلقة
-        </div>
-        <div class="card-body" id="pendingMissionsAccordion">
-            @foreach ($pendingMissions as $mission)
-                @include('includes.single-mission', ['status' => 'pending'])
-            @endforeach
-        </div>
-    </div>
-
-    <div class="card text-right my-5">
-        <div class="card-header h5 text-white bg-primary">
-            التكاليف المنتهية
-        </div>
-        <div class="card-body" id="doneMissionsAccordion">
-            @foreach ($doneMissions as $mission)
-                @include('includes.single-mission', ['status' => 'done'])
-            @endforeach
-        </div>
-    </div>
 
 
     <div class="modal fade" id="newMissionModal" tabindex="-1" role="dialog" aria-labelledby="new mission modal" aria-hidden="true">
@@ -87,7 +61,7 @@
                         </div>
 
                         <div class="input-group mb-3 search-input-group">
-                            <input class="form-control text-right" placeholder="بحث" id="personSearch">
+                            <input class="form-control text-right" placeholder="بحث" id="personSearch" {{ old('categoryId') && old('categoryId') != 1 ? '' : 'disabled' }}>
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                             </div>
@@ -96,16 +70,16 @@
                             </div>
                         </div>
 
-                        <div class="px-3" style="direction: rtl" id="personInfo">
+                        <div class="px-3 {{ old('categoryId') && old('categoryId') != 1 ? '' : 'd-none' }}" style="direction: rtl" id="personInfo">
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
                                 <span>:</span>
-                                <span id="personRankDisplay">{{ old('personId') ? Person::find(old('personId'))->rank->name : '' }}</span>
+                                <span id="personRankDisplay">{{ old('personId') ? User::find(old('personId'))->rank->name : '' }}</span>
                             </div>
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">إسم</span>
                                 <span>:</span>
-                                <span id="personNameDisplay">{{ old('personId') ? Person::find(old('personId'))->name : '' }}</span>
+                                <span id="personNameDisplay">{{ old('personId') ? User::find(old('personId'))->name : '' }}</span>
                             </div>
                         </div>
 
@@ -161,7 +135,7 @@
                 e.ctrlKey ||
                 e.altKey
             ){
-               return false;
+                return false;
             }
 
             if(s.length && s.length >= 3 ){ 
@@ -246,17 +220,17 @@
 
         document.querySelector('#newMissionModal select[name="categoryId"]').addEventListener('change', e=>{
             if(e.target.value == 1){
-                // personSearch.disabled = true;
-                // personId.disabled = true;
+                personSearch.disabled = true;
+                personId.disabled = true;
                 missionTitle.disabled = false;
 
-                // personInfo.classList.add('d-none');
+                personInfo.classList.add('d-none');
             }else{
-                // personSearch.disabled = false;
-                // personId.disabled = false;
+                personSearch.disabled = false;
+                personId.disabled = false;
                 missionTitle.disabled = true;
 
-                // personInfo.classList.remove('d-none');
+                personInfo.classList.remove('d-none');
             }
         })
     </script>

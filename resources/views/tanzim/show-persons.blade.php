@@ -14,10 +14,15 @@
 
 @section('content')
     <div class="d-flex justify-content-between">
-        <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#newPersonModal">
-            إضافة ضابط/فرد
-            <img class="ml-2" height="16" src="{{ asset('/svg/plus.svg') }}" alt="plus">
-        </button>
+        <div class="d-flex">
+            <button class="btn btn-primary d-flex align-items-center" data-toggle="modal" data-target="#newPersonModal">
+                إضافة ضابط/فرد
+                <img class="ml-2" height="16" src="{{ asset('/svg/plus.svg') }}" alt="plus">
+            </button>
+            <button class="btn btn-primary ml-3 d-flex align-items-center" data-toggle="modal" data-target="#searchPersonModal">
+                <img height="15" src="{{ asset('svg/white-search.svg') }}" alt="">
+            </button>
+        </div>
 
         <div class="d-flex flex-row-reverse font-weight-bold">
             <div class="ml-5">
@@ -324,6 +329,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="searchPersonModal" tabindex="-1" role="dialog" aria-labelledby="search person modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header flex-row-reverse">
+                    <h5 class="modal-title">بحت عن ضابط/فرد</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3 search-input-group">
+                        <input class="form-control text-right" placeholder="بحث" id="personSearch">
+                        <div class="input-group-append">
+                            <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
+                        </div>
+                        <div id="search-result-wrapper" class="d-none">
+                            <div class="mid p-3"><img height="20" src="{{ asset('gif/loader.gif') }}" alt=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -375,4 +404,101 @@
                 }
         })
     </script>
+
+<script>
+    personSearch.addEventListener('keyup', e=>{
+        e.stopPropagation();
+        let s = e.target.value;
+        let sBox = e.target.parentElement.querySelector('#search-result-wrapper');
+
+        if(
+            e.keyCode === 13 ||
+            e.keyCode === 16 ||
+            e.keyCode === 17 ||
+            e.keyCode === 18 ||
+            e.keyCode === 32 ||
+            e.keyCode === 27 ||
+            e.ctrlKey ||
+            e.altKey
+        ){
+           return false;
+        }
+
+        if(s.length && s.length >= 3 ){ 
+            sBox.innerHTML = '<div class="mid p-2"><img height="20" src="{{ asset('gif/loader.gif') }}" alt=""></div>';
+            sBox.classList.remove('d-none');
+            
+            (async function(){
+                const resObj = await fetch('{{ route('person-search') }}?search='+s);
+                const res = await resObj.json();
+                
+                if(res.success == true && res.result.length){
+                    sBox.innerHTML = '';
+                    res.result.forEach( one => {
+                        let element = document.createElement('div');
+                        element.className =  'res';
+                        element.textContent =  `${one.rank.name}/ ${one.name}`;
+                        element.addEventListener('click', e=>{
+                            sBox.classList.add('d-none');
+                            sBox.innerHTML = '';
+                            window.location.href = `/person/${one.id}`;
+                        })
+                        sBox.appendChild(element);
+                    })
+                }else{
+                    sBox.innerHTML = '<div class="mid p-2">لا يوجد</div>';
+                }
+            })()
+
+        }else{
+            sBox.classList.add('d-none');
+        }
+    });
+
+    personSearch.addEventListener('blur', e=>{
+        let sBox = e.target.parentElement.querySelector('#search-result-wrapper');
+        setTimeout(()=>{
+            sBox.classList.add('d-none');
+            sBox.innerHTML = '';
+        },300)
+    })
+
+    personSearch.addEventListener('focus', e=>{
+        let s = e.target.value;
+        let sBox = e.target.parentElement.querySelector('#search-result-wrapper');
+        
+        if(s.length && s.length >= 3 ){ 
+            sBox.innerHTML = '<div class="mid p-2"><img height="20" src="{{ asset('gif/loader.gif') }}" alt=""></div>';
+            sBox.classList.remove('d-none');
+            
+            (async function(){
+                const resObj = await fetch('{{ route('person-search') }}?search='+s);
+                const res = await resObj.json();
+                
+                if(res.success == true && res.result.length){
+                    sBox.innerHTML = '';
+                    res.result.forEach( one => {
+                        let element = document.createElement('div');
+                        element.className =  'res';
+                        element.textContent =  `${one.rank.name}/ ${one.name}`;
+                        element.addEventListener('click', e=>{
+                            sBox.classList.add('d-none');
+                            sBox.innerHTML = '';
+
+                            personNameDisplay.innerHTML = one.name;
+                            personRankDisplay.innerHTML = one.rank.name;
+                            personId.value = one.id;
+                        })
+                        sBox.appendChild(element);
+                    })
+                }else{
+                    sBox.innerHTML = '<div class="mid p-2">لا يوجد</div>';
+                }
+            })()
+
+        }else{
+            sBox.classList.add('d-none');
+        }
+    });
+</script>
 @endsection

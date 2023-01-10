@@ -17,7 +17,7 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->unsignedInteger('mission_id');
             $table->string('title');
-            $table->string('desc')->nullable();
+            $table->string('desc', 1000)->nullable();
             $table->enum('status', ['done','pending','active']);
             $table->timestamp('due_to')->nullable()->default(null);
             $table->timestamps();

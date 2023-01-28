@@ -259,5 +259,16 @@ class MissionsController extends Controller
             'categories' => $categories
         ]);
     }
+
+    public function showAppendices(Request $request){
+        $appendices = Mission::where( function ($query){
+            $query->where('category_id',20)
+               ->orWhere('category_id',21);
+        })->whereHas('tasks', function ($query){
+            $query->where('status','active');
+        })->with('tasks')->orderby('tasks.duo_to', 'DESC')->get();   
+
+        dd($appendices->toArray());
+    }
     
 }

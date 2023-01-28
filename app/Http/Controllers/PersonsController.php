@@ -7,6 +7,7 @@ use App\Models\Person;
 use App\Models\Rank;
 use App\Models\Unit;
 use App\Models\Speciality;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class PersonsController extends Controller
@@ -135,12 +136,14 @@ class PersonsController extends Controller
         $ranks = Rank::all();
         $units = Unit::all();
         $specialities = Speciality::all();
+        $categories = Category::all();
         
         return view('tanzim.show-person')->with([
             'person' => $person,
             'ranks' => $ranks,
             'units' => $units,
             'specialities' => $specialities,
+            'categories' => $categories
         ]);
     }
 

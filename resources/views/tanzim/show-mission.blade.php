@@ -33,7 +33,7 @@
                 <div>
                     <div class="h5 m-0">
                         @if($mission->category_id == 1)
-                            {{ $mission->title }}
+                            {{ $mission->title }} @if($mission->person_id) <a class="mission" href="{{ url('person',$mission->person->id) }}">{{ $mission->person->rank->name.'/'.$mission->person->name }}</a> @endif
                         @else
                             {{ $mission->category->name }} <a class="mission" href="{{ url('person',$mission->person->id) }}">{{ $mission->person->rank->name.'/'.$mission->person->name }}</a>
                         @endif
@@ -173,16 +173,16 @@
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
                                 <span>:</span>
-                                <span id="personRankDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->rank->name : ( $mission->category_id != 1 ? $mission->person->rank->name : '' ) }}</span>
+                                <span id="personRankDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->rank->name : ( $mission->person_id ? $mission->person->rank->name : '' ) }}</span>
                             </div>
                             <div class="text-right">
                                 <span class="d-inline-block" style="width:5rem; ">إسم</span>
                                 <span>:</span>
-                                <span id="personNameDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->name : ( $mission->category_id != 1 ? $mission->person->name : '' ) }}</span>
+                                <span id="personNameDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->name : ( $mission->person_id ? $mission->person->name : '' ) }}</span>
                             </div>
                         </div>
 
-                        <input name="personId" hidden id="personId" value="{{ old('personId') !== null ? old('personId') : ( $mission->category_id != 1 ? $mission->person->id : '' ) }}">
+                        <input name="personId" hidden id="personId" value="{{ old('personId') !== null ? old('personId') : ( $mission->person_id ? $mission->person->id : '' ) }}">
 
                         <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editMissionErrorBag">
                             <ul class="list-unstyled m-0" id="editMissionErrorsList"></ul>

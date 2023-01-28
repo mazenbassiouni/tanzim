@@ -29,6 +29,7 @@ Route::get('squads', [MissionsController::class, 'showSquads'])->name('squads');
 Route::get('cards', [MissionsController::class, 'showMedicalCards'])->name('cards');
 Route::get('end-services', [MissionsController::class, 'showEndServices'])->name('end-services');
 Route::get('investigations', [MissionsController::class, 'showInvestigations'])->name('investigations');
+Route::get('appendices', [MissionsController::class, 'showAppendices'])->name('appendices');
 
 //Tasks
 Route::post('add/task', [TasksController::class, 'addTask'])->name('add-new-task');

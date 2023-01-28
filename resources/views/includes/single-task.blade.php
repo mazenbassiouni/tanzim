@@ -17,7 +17,7 @@
     </div>
     <div id="collapse{{$task->id}}" class="collapse">
         <div class="card-body">
-            <div style="white-space: pre;">{{$task->desc}}</div>
+            <div style="white-space: pre; direction: rtl;">{{$task->desc}}</div>
             @if( $task->status != 'done' )
                 <div class="text-left">
                     <form action="{{ route('task-done') }}" method="POST">

@@ -1,3 +1,7 @@
+input, textarea, .tooltip-inner{
+    direction: rtl;
+}
+
 .mid{
     display: flex;
     align-items: center;

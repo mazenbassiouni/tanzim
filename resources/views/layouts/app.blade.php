@@ -17,6 +17,7 @@
                 @yield('content')
             </div>
             
+            @include('includes.modals')
             <script src="{{ asset('js/jquery.min.js') }}"></script>
             <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
             <script src="{{ asset('js/app-functions.js') }}"></script>
@@ -25,6 +26,9 @@
                     $('[data-toggle="tooltip"]').tooltip()
                 })
             </script>
+            @if (!request()->route()->named('show-mission') && !request()->route()->named('force'))
+                @include('includes.new-mission-scripts');
+            @endif
             @yield('scripts')
     </body>
 </html>

@@ -160,7 +160,7 @@
                         </div>
 
                         <div class="input-group mb-3 search-input-group">
-                            <input class="form-control text-right" placeholder="بحث" id="personSearch">
+                            <input class="form-control text-right" placeholder="بحث" id="personSearch" autocomplete="off">
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                             </div>

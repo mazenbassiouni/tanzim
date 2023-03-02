@@ -56,12 +56,12 @@
                         <div class="text-right">
                             <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
                             <span>:</span>
-                            <span id="personRankDisplay">{{ old('personId') ? User::find(old('personId'))->rank->name : (request()->route()->named('show-person') ? $person->rank->name : '') }}</span>
+                            <span id="personRankDisplay">{{ old('personId') ? Person::find(old('personId'))->rank->name : (request()->route()->named('show-person') ? $person->rank->name : '') }}</span>
                         </div>
                         <div class="text-right">
                             <span class="d-inline-block" style="width:5rem; ">إسم</span>
                             <span>:</span>
-                            <span id="personNameDisplay">{{ old('personId') ? User::find(old('personId'))->name : (request()->route()->named('show-person') ? $person->name : '') }}</span>
+                            <span id="personNameDisplay">{{ old('personId') ? Person::find(old('personId'))->name : (request()->route()->named('show-person') ? $person->name : '') }}</span>
                         </div>
                     </div>
 

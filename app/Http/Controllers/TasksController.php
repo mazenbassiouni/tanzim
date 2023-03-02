@@ -87,7 +87,7 @@ class TasksController extends Controller
         $task = Task::findOrFail($request->taskId);
         
         $task->status = 'done';
-        $task->done_at = Carbon::now();
+        $task->done_at = $request->done_at ?? Carbon::now();
         $task->save();
 
         return back();

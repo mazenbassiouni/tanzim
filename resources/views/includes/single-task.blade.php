@@ -20,13 +20,38 @@
             <div style="white-space: pre; direction: rtl;">{{$task->desc}}</div>
             @if( $task->status != 'done' )
                 <div class="text-left">
-                    <form action="{{ route('task-done') }}" method="POST">
-                        @csrf
-                        <input type="number" name="taskId" value="{{$task->id}}" hidden>
-                        <button class="btn btn-sm btn-success d-flex align-items-center">إنتهاء البند <img class="ml-1" height="14" src="{{ asset('svg/white-check.svg') }}" alt=""></button>
-                    </form>
+                    <button data-toggle="modal" data-target="#markDone{{$task->id}}" class="btn btn-sm btn-success d-flex align-items-center">إنتهاء البند <img class="ml-1" height="14" src="{{ asset('svg/white-check.svg') }}" alt=""></button>
                 </div>
             @endif
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="markDone{{$task->id}}" tabindex="-1" role="dialog" aria-labelledby="mark done task modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header flex-row-reverse">
+                <h5 class="modal-title" id="exampleModalLongTitle">إنتهاء البند</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('task-done') }}" method="POST">
+                <div class="modal-body text-center">
+                    <div class="input-group mb-3">
+                        <input type="date" class="form-control text-right" name="done_at">
+                        <div class="input-group-append">
+                            <span class="input-group-text" style="width: 6rem">تاريخ الإنتهاء</span>
+                        </div>
+                    </div>
+                </div>
+                @csrf
+                <input type="number" name="taskId" value="{{$task->id}}" hidden>
+                <div class="modal-footer justify-content-start">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                    <button class="btn btn-success d-flex align-items-center">إنتهاء<img class="ml-1" height="14" src="{{ asset('svg/white-check.svg') }}" alt=""></button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

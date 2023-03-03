@@ -8,9 +8,12 @@ use App\Models\Task;
 use App\Models\Category;
 use App\Models\CategoryTasks;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Traits\Functions;
 
 class MissionsController extends Controller
 {
+    use Functions;
+
     public function index(){
         $activeMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
                     ->where('tasks.status', 'active')
@@ -35,8 +38,8 @@ class MissionsController extends Controller
                     })
                     ->groupBy('missions.id')
                     ->select('missions.*')
-                    ->selectRaw('MIN(tasks.due_to) as due_date')
-                    ->orderBy('tasks.created_at')
+                    ->selectRaw('MAX(tasks.done_at) as done_at')
+                    ->orderByDesc('done_at')
                     ->get();
 
         $doneMissions = Mission::join('tasks', 'missions.id', '=', 'tasks.mission_id')
@@ -52,8 +55,8 @@ class MissionsController extends Controller
                     })
                     ->groupBy('missions.id')
                     ->select('missions.*')
-                    ->selectRaw('MAX(tasks.due_to) as due_date')
-                    ->orderBy('due_date')
+                    ->selectRaw('MAX(tasks.done_at) as done_at')
+                    ->orderByDesc('done_at')
                     ->get();
 
         $categories = Category::all();
@@ -172,11 +175,10 @@ class MissionsController extends Controller
     }
 
     public function showCouncils(Request $request){
-        $sickCouncils = Mission::where('category_id', 3)->orderby('started_at', 'DESC')->get();
 
-        $injuryCouncils = Mission::where('category_id', 9)->orderby('started_at', 'DESC')->get();
-
-        $surgeryApprovals = Mission::where('category_id', 11)->orderby('started_at', 'DESC')->get();
+        $sickCouncils = $this->missionsCollection(3);
+        $injuryCouncils = $this->missionsCollection(9);
+        $surgeryApprovals = $this->missionsCollection(11);
 
         $categories = Category::all();
 
@@ -189,7 +191,7 @@ class MissionsController extends Controller
     }
 
     public function showInjuries(Request $request){
-        $injuries = Mission::where('category_id', 2)->orderby('started_at', 'DESC')->get();
+        $injuries = $this->missionsCollection(2);
 
         $categories = Category::all();
 
@@ -239,8 +241,8 @@ class MissionsController extends Controller
     }
 
     public function showEndServices(Request $request){
-        $end_services = Mission::where('category_id', 10)->orderby('started_at', 'DESC')->get();
-        
+        // $end_services = Mission::where('category_id', 10)->orderby('started_at', 'DESC')->get();
+        $end_services = $this->missionsCollection(10);
         $categories = Category::all();
         
         return view('tanzim.end-service')->with([
@@ -250,12 +252,25 @@ class MissionsController extends Controller
     }
 
     public function showInvestigations(Request $request){
-        $investigations = Mission::where('category_id', 7)->orderby('started_at', 'DESC')->get();
+        $investigations = $this->missionsCollection(7);
         
         $categories = Category::all();
         
         return view('tanzim.investigations')->with([
             'investigations' => $investigations,
+            'categories' => $categories
+        ]);
+    }
+
+    public function showAttachments(Request $request){
+        $insideAttach = $this->missionsCollection(20);
+        $outsideAttach = $this->missionsCollection(21);
+
+        $categories = Category::all();
+        
+        return view('tanzim.attachments')->with([
+            'outsideAttach' => $outsideAttach,
+            'insideAttach' => $insideAttach,
             'categories' => $categories
         ]);
     }

@@ -18,6 +18,7 @@ class PersonsController extends Controller
         $officers = Person::where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
         $subOfficers = Person::where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
         $soldiers = Person::where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
+        $notForce = Person::whereIsForce(false)->orderBy('deleted_date','DESC')->get();
 
         $tamam = [
             'total' => Person::whereService(true)->whereIsForce(true)->count(),
@@ -34,6 +35,7 @@ class PersonsController extends Controller
             'officers' => $officers,
             'subOfficers' => $subOfficers,
             'soliders' => $soldiers,
+            'notForce' => $notForce,
             'ranks' => $ranks,
             'units' => $units,
             'specialities' => $specialities,

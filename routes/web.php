@@ -30,6 +30,7 @@ Route::get('cards', [MissionsController::class, 'showMedicalCards'])->name('card
 Route::get('end-services', [MissionsController::class, 'showEndServices'])->name('end-services');
 Route::get('investigations', [MissionsController::class, 'showInvestigations'])->name('investigations');
 Route::get('appendices', [MissionsController::class, 'showAppendices'])->name('appendices');
+Route::get('attachments', [MissionsController::class, 'showAttachments'])->name('attachments');
 
 //Tasks
 Route::post('add/task', [TasksController::class, 'addTask'])->name('add-new-task');

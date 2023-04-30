@@ -1,5 +1,5 @@
 <div class="card {{$loop->first ? 'mb-3' : ($loop->last? 'mt-3' : 'my-3')}}">
-    <div class="card-header py-1 d-flex justify-content-between align-items-center {{ $mission->due_date && $mission->due_date < Carbon::now() ? 'alert-danger' : ($mission->due_date && $mission->due_date <= Carbon::tomorrow() ? 'alert-warning' : '') }}">
+    <div class="card-header py-1 d-flex justify-content-between align-items-center {{ $mission->due_date && $mission->due_date < Carbon::today() ? 'alert-danger' : ($mission->due_date && $mission->due_date < Carbon::tomorrow() ? 'alert-warning' : ($mission->due_date && $mission->due_date < Carbon::today()->addDays(2) ? 'alert-info' : '')) }}">
         <div>
             <a href="#" data-toggle="modal" data-target="#deleteMission{{$mission->id}}" class="p-2"><img height="20" src="{{ asset('svg/trash.svg') }}" alt=""></a>
             <a href="{{ url('mission', $mission->id) }}" class="p-2 ml-1 mr-5"><img height="15" src="{{ asset('svg/eye.svg') }}" alt=""></a>

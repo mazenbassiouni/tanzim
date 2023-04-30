@@ -171,7 +171,7 @@
                             <td>{{ $person->speciality->name }}</td>
                             <td>{{ $person->unit->name }}</td>
                             <td>{{ $person->deleted_date->format('d/m/Y') }}</td>
-                            <td>{{ $person->note }}</td>
+                            <td>{{ $person->deleted_desc }}</td>
                         </tr>
                     @endforeach
                 </tbody>

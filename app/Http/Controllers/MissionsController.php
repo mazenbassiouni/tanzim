@@ -7,6 +7,7 @@ use App\Models\Mission;
 use App\Models\Task;
 use App\Models\Category;
 use App\Models\CategoryTasks;
+use App\Models\Speciality;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Traits\Functions;
 
@@ -285,5 +286,27 @@ class MissionsController extends Controller
 
         dd($appendices->toArray());
     }
+
+    public function showCategoryMission(Request $request){
+        $category = Category::findOrFail($request->id);
+        $missions = $this->missionsCollection($category->id);
+        
+        $categories = Category::all();
+
+        return view('tanzim.show-category-mission')->with([
+            'category' => $category,
+            'missions' => $missions,
+            'categories' => $categories
+        ]);
+    }
     
+    public function missionsSettings(){
+        $categories = Category::all();
+        $specialities = Speciality::orderBy('name')->get();
+
+        return view('tanzim.missions-settings')->with([
+            'specialities' => $specialities,
+            'categories' => $categories
+        ]);
+    }
 }

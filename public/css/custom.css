@@ -42,3 +42,17 @@ input, textarea, .tooltip-inner{
 #search-result-wrapper .res:hover{
     background-color: #80bdff;
 }
+
+.navbar .dropdown .dropdown-toggle{
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.navbar .dropdown .dropdown-toggle::after{
+    margin-right: .2rem;
+}
+
+.navbar .dropdown .dropdown-menu{
+    text-align: right;
+}

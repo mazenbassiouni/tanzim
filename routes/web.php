@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MissionsController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\PersonsController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\SpecialitiesController;
+use App\Http\Controllers\CategoriesTasksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +25,9 @@ Route::get('/', [MissionsController::class, 'index'])->name('missions');
 Route::post('add/mission', [MissionsController::class, 'addMission'])->name('add-new-mission');
 Route::post('edit/mission', [MissionsController::class, 'editMission'])->name('edit-mission');
 Route::post('delete/mission', [MissionsController::class, 'deleteMission'])->name('delete-mission');
+
+Route::get('missions/settings', [MissionsController::class, 'missionsSettings'])->where('id', '[0-9]+')->name('missions-settings');
+Route::get('missions/{id}', [MissionsController::class, 'showCategoryMission'])->where('id', '[0-9]+')->name('show-category-mission');
 Route::get('mission/{id}', [MissionsController::class, 'showMission'])->where('id', '[0-9]+')->name('show-mission');
 Route::get('councils', [MissionsController::class, 'showCouncils'])->name('councils');
 Route::get('injuries', [MissionsController::class, 'showInjuries'])->name('injuries');
@@ -44,3 +50,19 @@ Route::post('add/person', [PersonsController::class, 'addPerson'])->name('add-ne
 Route::get('search/person', [PersonsController::class, 'search'])->name('person-search');
 Route::get('person/{id}' , [PersonsController::class, 'showPerson'])->where('id', '[0-9]+')->name('show-person');
 Route::post('edit/person', [PersonsController::class, 'editPerson'])->name('edit-person');
+
+//Categories
+Route::get('category/{id}', [CategoriesController::class, 'showCategory'])->where('id', '[0-9]+')->name('show-category');
+Route::post('add/category', [CategoriesController::class, 'addCategory'])->name('add-category');
+Route::post('edit/category', [CategoriesController::class, 'editCategory'])->name('edit-category');
+Route::post('delete/category', [CategoriesController::class, 'deleteCategory'])->name('delete-category');
+
+//specialities
+Route::post('add/speciality', [SpecialitiesController::class, 'addSpeciality'])->name('add-speciality');
+Route::post('edit/speciality', [SpecialitiesController::class, 'editSpeciality'])->name('edit-speciality');
+Route::post('delete/speciality', [SpecialitiesController::class, 'deleteSpeciality'])->name('delete-speciality');
+
+//Categories tasks
+Route::post('add/category-task', [CategoriesTasksController::class, 'addTask'])->name('add-category-task');
+Route::post('edit/category-task', [CategoriesTasksController::class, 'editTask'])->name('edit-category-task');
+Route::post('delete/category-task', [CategoriesTasksController::class, 'deleteTask'])->name('delete-category-task');

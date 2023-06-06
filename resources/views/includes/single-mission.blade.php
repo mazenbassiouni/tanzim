@@ -7,23 +7,32 @@
                 {{ Carbon::create($mission->due_date)->locale('ar')->isoFormat('dddd, DD/MM/OY') }}
             @endif
         </div>
-        <h5 class="mb-0">
+        <h5 class="mb-0" style="max-width: 65%; overflow: hidden; direction: rtl;">
             <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}" >
                 <button style="text-decoration:none" class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
                     <b>
                         @if($mission->category_id == 1)
-                            @if ( !request()->route()->named('show-person') && $mission->person_id )
-                                <span class="text-dark">{{ $mission->title }} : </span>&nbsp; {{ optional(optional($mission->person)->rank)->name.'/'.optional($mission->person)->name }}
+                            @if ( !request()->route()->named('show-person') && $mission->people->count() && $mission->people->count() == 1 )
+                                <span class="text-dark">{{ $mission->title }} : </span>&nbsp; {{ optional(optional($mission->people()->first())->rank)->name.'/'.optional($mission->people()->first())->name }}
+                            @elseif(!request()->route()->named('show-person') && $mission->people->count())
+                                <span class="text-dark">{{ $mission->title }} : </span>
                             @else
                                 {{ $mission->title }}
                             @endif
                         @else
                             @if(request()->route()->named('missions') )
-                                <span class="text-dark">{{ $mission->category->name }} : </span>&nbsp; {{ optional(optional($mission->person)->rank)->name.'/'.optional($mission->person)->name }}
+                                <span class="text-dark">{{ $mission->category->name }} : </span>
+                                <span>
+                                    @foreach ($mission->people as $per)
+                                        {{ $per->rank->name }}/{{ $per->name }}{{ !$loop->last ? '، ' : '' }}
+                                    @endforeach
+                                </span>
                             @elseif(request()->route()->named('show-person'))
                                 {{ $mission->category->name }}
                             @else
-                                {{ optional(optional($mission->person)->rank)->name.'/'.optional($mission->person)->name }}
+                                @foreach ($mission->people as $per)
+                                    {{ $per->rank->name }}/{{ $per->name }}{{ !$loop->last ? '، ' : '' }}
+                                @endforeach
                             @endif
                         @endif
                     </b>

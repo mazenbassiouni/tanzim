@@ -47,25 +47,42 @@
                         <div class="input-group-append">
                             <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                         </div>
-                        <div id="search-result-wrapper" class="d-none">
+                        <div id="search-result-wrapper" class="d-none" style="z-index: 999">
                             <div class="mid p-3"><img height="20" src="{{ asset('gif/loader.gif') }}" alt=""></div>
                         </div>
                     </div>
 
                     <div class="px-3" style="direction: rtl" id="personInfo">
-                        <div class="text-right">
-                            <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
-                            <span>:</span>
-                            <span id="personRankDisplay">{{ old('personId') ? Person::find(old('personId'))->rank->name : (request()->route()->named('show-person') ? $person->rank->name : '') }}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="d-inline-block" style="width:5rem; ">إسم</span>
-                            <span>:</span>
-                            <span id="personNameDisplay">{{ old('personId') ? Person::find(old('personId'))->name : (request()->route()->named('show-person') ? $person->name : '') }}</span>
+                        <div class="text-right row">
+                            <div class="col-2">خاصة</div>
+                            <div class="col-10 pr-0">
+                                <ul id="peopleList">
+                                    @if (old('peopleId'))
+                                        @foreach (json_decode(old('peopleId')) as $id)
+                                            @php
+                                                $old_person = Person::find($id);
+                                            @endphp
+                                            <li>
+                                                <div class="d-flex justify-content-between">
+                                                    <span>{{ $old_person->rank->name .'/ '. $old_person->name }}</span>
+                                                    <span class="close d-flex align-items-center" data-id="{{ $old_person->id }}" style="font-size: 1rem;">x</span>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    @elseif(request()->route()->named('show-person'))
+                                        <li>
+                                            <div class="d-flex justify-content-between">
+                                                <span>{{ $person->rank->name .'/ '. $person->name }}</span>
+                                                <span class="close d-flex align-items-center" data-id="{{ $person->id }}" style="font-size: 1rem;">x</span>
+                                            </div>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
-                    <input name="personId" hidden id="personId" value="{{ old('personId') ?? (request()->route()->named('show-person') ? $person->id : '') }}">
+                    <input name="peopleId" hidden id="peopleId" value="{{ old('peopleId') ? old('peopleId') : ((request()->route()->named('show-person') ? "[$person->id]" : '[]')) }}">
 
                     <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="newMissionErrorBag">
                         <ul class="list-unstyled m-0" id="newMissionErrorsList"></ul>

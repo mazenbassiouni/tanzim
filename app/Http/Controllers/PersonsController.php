@@ -29,7 +29,7 @@ class PersonsController extends Controller
 
         $ranks = Rank::all();
         $units = Unit::all();
-        $specialities = Speciality::all();
+        $specialities = Speciality::orderBy('name')->get();
 
         return view('tanzim.show-persons')->with([
             'officers' => $officers,
@@ -137,7 +137,7 @@ class PersonsController extends Controller
 
         $ranks = Rank::all();
         $units = Unit::all();
-        $specialities = Speciality::all();
+        $specialities = Speciality::orderBy('name')->get();
         $categories = Category::all();
         
         return view('tanzim.show-person')->with([

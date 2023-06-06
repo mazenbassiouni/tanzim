@@ -177,58 +177,58 @@
                 </div>
             </div>
         </div>
+    @endforeach
 
-        <div class="modal fade" id="addNewTask" tabindex="-1" role="dialog" aria-labelledby="new task modal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header flex-row-reverse">
-                        <h5 class="modal-title">إضافة بند</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    <div class="modal fade" id="addNewTask" tabindex="-1" role="dialog" aria-labelledby="new task modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header flex-row-reverse">
+                    <h5 class="modal-title">إضافة بند</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin: -1rem auto -1rem -1rem">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action="{{ route('add-category-task') }}" method="POST">
+                    @csrf
+                    <input type="number" value="{{$category->id}}" name="categoryId" hidden>
+
+                    <div class="modal-body text-center">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-right" name="title" value="{{ session('error_type') == 'add task' ? old('title') : '' }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-right" name="desc" value="{{ session('error_type') == 'add task' ? old('desc') : '' }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 5.5rem">الموضوع</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-right" name="order" value="{{ session('error_type') == 'add task' ? old('order') : '' }}">
+                            <div class="input-group-append">
+                                <span class="input-group-text justify-content-center" style="width: 5.5rem">الترتيب</span>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="addTaskErrorBag">
+                            <ul class="list-unstyled m-0" id="addTaskErrorsList"></ul>
+                        </div>
                     </div>
 
-                    <form action="{{ route('add-category-task') }}" method="POST">
-                        @csrf
-                        <input type="number" value="{{$task->id}}" name="taskId" hidden>
-                        <input type="number" value="{{$category->id}}" name="categoryId" hidden>
-
-                        <div class="modal-body text-center">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control text-right" name="title" value="{{ session('error_type') == 'add task' ? old('title') : '' }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text justify-content-center" style="width: 5.5rem">العنوان</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control text-right" name="desc" value="{{ session('error_type') == 'add task' ? old('desc') : '' }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text justify-content-center" style="width: 5.5rem">الموضوع</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control text-right" name="order" value="{{ session('error_type') == 'add task' ? old('order') : '' }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text justify-content-center" style="width: 5.5rem">الترتيب</span>
-                                </div>
-                            </div>
-
-                            <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="addTaskErrorBag">
-                                <ul class="list-unstyled m-0" id="addTaskErrorsList"></ul>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer justify-content-start">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
-                            <button class="btn btn-primary">إضافة</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="modal-footer justify-content-start">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                        <button class="btn btn-primary">إضافة</button>
+                    </div>
+                </form>
             </div>
         </div>
-    @endforeach
+    </div>
+
 @endsection
 
 @section('scripts')

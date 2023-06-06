@@ -33,13 +33,21 @@
                 <div>
                     <div class="h5 m-0">
                         @if($mission->category_id == 1)
-                            {{ $mission->title }} @if($mission->person_id && $mission->person) <a class="mission" href="{{ url('person',$mission->person->id) }}">{{ $mission->person->rank->name.'/'.$mission->person->name }}</a> @endif
+                            {{ $mission->title }}
                         @else
-                            {{ $mission->category->name }} @if($mission->person)<a class="mission" href="{{ url('person',$mission->person->id) }}">{{ $mission->person->rank->name.'/'.$mission->person->name }}</a>@endif
+                            {{ $mission->category->name }}
+                        @endif
+
+                        @if ($mission->people->count() && $mission->people->count() == 1 )
+                            <a class="mission" href="{{ url('person',$mission->people()->first()->id) }}">{{ $mission->people()->first()->rank->name.'/'.$mission->people()->first()->name }}</a>
+                        @elseif($mission->people->count())
+                            @foreach ($mission->people as $per)
+                                <a class="mission {{ !$loop->first ? 'd-block pr-5' : 'pr-1'}} {{ $loop->last ? 'mb-3' : '' }}" href="{{ url('person',$per->id) }}">{{ $per->rank->name.'/'.$per->name }}</a>
+                            @endforeach
                         @endif
                     </div>
-                    <div class="text-light" style="line-height: 1">
-                        {{ $mission->desc }} ({{ $mission->started_at->locale('ar')->isoFormat('dddd, DD/MM/OY') }})
+                    <div class="text-light">
+                        {{ $mission->desc ? $mission->desc .'.': ''  }} <b>({{ $mission->started_at->locale('ar')->isoFormat('dddd, DD/MM/OY') }})</b>
                     </div>
                 </div>
             </div>
@@ -164,25 +172,44 @@
                             <div class="input-group-append">
                                 <span class="input-group-text" style="width: 5.5rem; justify-content:center;"><img height="15" src="{{ asset('svg/search.svg') }}" alt=""></span>
                             </div>
-                            <div id="search-result-wrapper" class="d-none">
+                            <div id="search-result-wrapper" class="d-none" style="z-index: 999;">
                                 <div class="mid p-3"><img height="20" src="{{ asset('gif/loader.gif') }}" alt=""></div>
                             </div>
                         </div>
 
                         <div class="px-3" style="direction: rtl" id="personInfo">
-                            <div class="text-right">
-                                <span class="d-inline-block" style="width:5rem; ">رتبة/درجة</span>
-                                <span>:</span>
-                                <span id="personRankDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->rank->name : ( $mission->person_id && $mission->person ? $mission->person->rank->name : '' ) }}</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="d-inline-block" style="width:5rem; ">إسم</span>
-                                <span>:</span>
-                                <span id="personNameDisplay">{{ old('personId') !== null ? Person::find(old('personId'))->name : ( $mission->person_id && $mission->person ? $mission->person->name : '' ) }}</span>
+                            <div class="text-right row">
+                                <div class="col-2">خاصة</div>
+                                <div class="col-10 pr-0">
+                                    <ul id="peopleList">
+                                        @if (old('peopleId'))
+                                            @foreach (json_decode(old('peopleId')) as $id)
+                                                @php
+                                                    $old_person = Person::find($id);
+                                                @endphp
+                                                <li>
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>{{ $old_person->rank->name .'/ '. $old_person->name }}</span>
+                                                        <span class="close d-flex align-items-center" data-id="{{ $old_person->id }}" style="font-size: 1rem;">x</span>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        @else
+                                            @foreach ($mission->people as $per)
+                                                <li>
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>{{ $per->rank->name .'/ '. $per->name }}</span>
+                                                        <span class="close d-flex align-items-center" data-id="{{ $per->id }}" style="font-size: 1rem;">x</span>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
-                        <input name="personId" hidden id="personId" value="{{ old('personId') !== null ? old('personId') : ( $mission->person_id && $mission->person ? $mission->person->id : '' ) }}">
+                        <input name="peopleId" hidden id="peopleId" value="{{ old('peopleId') ? old('peopleId') : $mission->people->pluck('id') }}">
 
                         <div class="alert alert-danger bg-danger text-white mt-4 text-right d-none" id="editMissionErrorBag">
                             <ul class="list-unstyled m-0" id="editMissionErrorsList"></ul>
@@ -339,9 +366,31 @@
                                 sBox.classList.add('d-none');
                                 sBox.innerHTML = '';
 
-                                personNameDisplay.innerHTML = one.name;
-                                personRankDisplay.innerHTML = one.rank.name;
-                                personId.value = one.id;
+                                if( !JSON.parse(peopleId.value).includes(one.id) ){
+                                let personLable = document.createElement('div');
+                                personLable.className = 'd-flex justify-content-between'
+                                
+                                let personName = document.createElement('span');
+                                personName.textContent = `${one.rank.name}/ ${one.name}`;
+                                personLable.appendChild(personName);
+    
+                                let removePerson = document.createElement('span');
+                                removePerson.className = 'close d-flex align-items-center';
+                                removePerson.textContent = `x`;
+                                removePerson.style.fontSize = '1rem'
+                                removePerson.dataset.id = one.id;
+                                personLable.appendChild(removePerson);
+                                addRemovePersonFq(removePerson, one.id);
+    
+                                let personListItem = document.createElement('li');
+                                personListItem.appendChild(personLable);
+    
+                                peopleList.appendChild(personListItem);
+    
+                                let peopleArray = JSON.parse(peopleId.value);
+                                peopleArray.push(one.id);
+                                peopleId.value = JSON.stringify(peopleArray);
+                            }
                             })
                             sBox.appendChild(element);
                         })
@@ -385,9 +434,31 @@
                                 sBox.classList.add('d-none');
                                 sBox.innerHTML = '';
 
-                                personNameDisplay.innerHTML = one.name;
-                                personRankDisplay.innerHTML = one.rank.name;
-                                personId.value = one.id;
+                                if( !JSON.parse(peopleId.value).includes(one.id) ){
+                                let personLable = document.createElement('div');
+                                personLable.className = 'd-flex justify-content-between'
+                                
+                                let personName = document.createElement('span');
+                                personName.textContent = `${one.rank.name}/ ${one.name}`;
+                                personLable.appendChild(personName);
+    
+                                let removePerson = document.createElement('span');
+                                removePerson.className = 'close d-flex align-items-center';
+                                removePerson.textContent = `x`;
+                                removePerson.style.fontSize = '1rem'
+                                removePerson.dataset.id = one.id;
+                                personLable.appendChild(removePerson);
+                                addRemovePersonFq(removePerson, one.id);
+    
+                                let personListItem = document.createElement('li');
+                                personListItem.appendChild(personLable);
+    
+                                peopleList.appendChild(personListItem);
+    
+                                let peopleArray = JSON.parse(peopleId.value);
+                                peopleArray.push(one.id);
+                                peopleId.value = JSON.stringify(peopleArray);
+                            }
                             })
                             sBox.appendChild(element);
                         })
@@ -401,16 +472,32 @@
             }
         });
 
+        function addRemovePersonFq(btn, id){
+            btn.addEventListener('click', e =>{
+                let peopleArray = JSON.parse(peopleId.value);
+                let index = peopleArray.indexOf(id);
+                if (index > -1) {
+                    peopleArray.splice(index, 1);
+                    peopleId.value = JSON.stringify(peopleArray);
+                    btn.closest('li').remove();
+                }
+            })
+        }
+
+        document.querySelectorAll('#peopleList .close').forEach(btn => {
+            addRemovePersonFq(btn, parseInt(btn.dataset.id))
+        })
+
         document.querySelector('#editMissionModal select[name="categoryId"]').addEventListener('change', e=>{
             if(e.target.value == 1){
                 // personSearch.disabled = true;
-                // personId.disabled = true;
+                // peopleId.disabled = true;
                 missionTitle.disabled = false;
 
                 // personInfo.classList.add('d-none');
             }else{
                 // personSearch.disabled = false;
-                // personId.disabled = false;
+                // peopleId.disabled = false;
                 missionTitle.disabled = true;
 
                 // personInfo.classList.remove('d-none');

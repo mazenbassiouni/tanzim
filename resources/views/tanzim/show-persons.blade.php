@@ -533,5 +533,9 @@
             sBox.classList.add('d-none');
         }
     });
+    
+    $('#searchPersonModal').on('shown.bs.modal', () => {
+        personSearch.focus();
+    })
 </script>
 @endsection

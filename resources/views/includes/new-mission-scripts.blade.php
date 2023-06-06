@@ -52,10 +52,32 @@
                         element.addEventListener('click', e=>{
                             sBox.classList.add('d-none');
                             sBox.innerHTML = '';
-
-                            personNameDisplay.innerHTML = one.name;
-                            personRankDisplay.innerHTML = one.rank.name;
-                            personId.value = one.id;
+                            
+                            if( !JSON.parse(peopleId.value).includes(one.id) ){
+                                let personLable = document.createElement('div');
+                                personLable.className = 'd-flex justify-content-between'
+                                
+                                let personName = document.createElement('span');
+                                personName.textContent = `${one.rank.name}/ ${one.name}`;
+                                personLable.appendChild(personName);
+    
+                                let removePerson = document.createElement('span');
+                                removePerson.className = 'close d-flex align-items-center';
+                                removePerson.textContent = `x`;
+                                removePerson.style.fontSize = '1rem'
+                                removePerson.dataset.id = one.id;
+                                personLable.appendChild(removePerson);
+                                addRemovePersonFq(removePerson, one.id);
+    
+                                let personListItem = document.createElement('li');
+                                personListItem.appendChild(personLable);
+    
+                                peopleList.appendChild(personListItem);
+    
+                                let peopleArray = JSON.parse(peopleId.value);
+                                peopleArray.push(one.id);
+                                peopleId.value = JSON.stringify(peopleArray);
+                            }
                         })
                         sBox.appendChild(element);
                     })
@@ -98,10 +120,32 @@
                         element.addEventListener('click', e=>{
                             sBox.classList.add('d-none');
                             sBox.innerHTML = '';
-
-                            personNameDisplay.innerHTML = one.name;
-                            personRankDisplay.innerHTML = one.rank.name;
-                            personId.value = one.id;
+                            
+                            if( !JSON.parse(peopleId.value).includes(one.id) ){
+                                let personLable = document.createElement('div');
+                                personLable.className = 'd-flex justify-content-between'
+                                
+                                let personName = document.createElement('span');
+                                personName.textContent = `${one.rank.name}/ ${one.name}`;
+                                personLable.appendChild(personName);
+    
+                                let removePerson = document.createElement('span');
+                                removePerson.className = 'close d-flex align-items-center';
+                                removePerson.textContent = `x`;
+                                removePerson.style.fontSize = '1rem'
+                                removePerson.dataset.id = one.id;
+                                personLable.appendChild(removePerson);
+                                addRemovePersonFq(removePerson, one.id);
+    
+                                let personListItem = document.createElement('li');
+                                personListItem.appendChild(personLable);
+    
+                                peopleList.appendChild(personListItem);
+    
+                                let peopleArray = JSON.parse(peopleId.value);
+                                peopleArray.push(one.id);
+                                peopleId.value = JSON.stringify(peopleArray);
+                            }
                         })
                         sBox.appendChild(element);
                     })
@@ -115,16 +159,32 @@
         }
     });
 
+    function addRemovePersonFq(btn, id){
+        btn.addEventListener('click', e =>{
+            let peopleArray = JSON.parse(peopleId.value);
+            let index = peopleArray.indexOf(id);
+            if (index > -1) {
+                peopleArray.splice(index, 1);
+                peopleId.value = JSON.stringify(peopleArray);
+                btn.closest('li').remove();
+            }
+        })
+    }
+
+    document.querySelectorAll('#peopleList .close').forEach(btn => {
+        addRemovePersonFq(btn, parseInt(btn.dataset.id))
+    })
+
     document.querySelector('#newMissionModal select[name="categoryId"]').addEventListener('change', e=>{
         if(e.target.value == 1){
             // personSearch.disabled = true;
-            // personId.disabled = true;
+            // peopleId.disabled = true;
             missionTitle.disabled = false;
 
             // personInfo.classList.add('d-none');
         }else{
             // personSearch.disabled = false;
-            // personId.disabled = false;
+            // peopleId.disabled = false;
             missionTitle.disabled = true;
 
             // personInfo.classList.remove('d-none');

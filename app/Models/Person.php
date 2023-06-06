@@ -26,8 +26,8 @@ class Person extends Model
     public function milUnit(){
         return $this->belongsTo(Unit::class, 'mil_unit_id');
     }
-
+    
     public function missions(){
-        return $this->hasMany(Mission::class);
+        return $this->belongsToMany(Mission::class);
     }
 }

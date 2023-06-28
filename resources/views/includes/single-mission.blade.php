@@ -16,6 +16,11 @@
                                 <span class="text-dark">{{ $mission->title }} : </span>&nbsp; {{ optional(optional($mission->people()->first())->rank)->name.'/'.optional($mission->people()->first())->name }}
                             @elseif(!request()->route()->named('show-person') && $mission->people->count())
                                 <span class="text-dark">{{ $mission->title }} : </span>
+                                <span>
+                                    @foreach ($mission->people as $per)
+                                        {{ $per->rank->name }}/{{ $per->name }}{{ !$loop->last ? '، ' : '' }}
+                                    @endforeach
+                                </span>
                             @else
                                 {{ $mission->title }}
                             @endif

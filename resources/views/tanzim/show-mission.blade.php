@@ -31,20 +31,24 @@
                     </a>
                 </div>
                 <div>
-                    <div class="h5 m-0">
-                        @if($mission->category_id == 1)
-                            {{ $mission->title }}
-                        @else
-                            {{ $mission->category->name }}
-                        @endif
-
-                        @if ($mission->people->count() && $mission->people->count() == 1 )
-                            <a class="mission" href="{{ url('person',$mission->people()->first()->id) }}">{{ $mission->people()->first()->rank->name.'/'.$mission->people()->first()->name }}</a>
-                        @elseif($mission->people->count())
-                            @foreach ($mission->people as $per)
-                                <a class="mission {{ !$loop->first ? 'd-block pr-5' : 'pr-1'}} {{ $loop->last ? 'mb-3' : '' }}" href="{{ url('person',$per->id) }}">{{ $per->rank->name.'/'.$per->name }}</a>
-                            @endforeach
-                        @endif
+                    <div class="h5 m-0 d-flex flex-row-reverse">
+                        <div class="ml-3">
+                            @if($mission->category_id == 1)
+                                {{ $mission->title }}
+                            @else
+                                {{ $mission->category->name }}
+                            @endif
+                        </div>
+                        
+                        <div>
+                            @if ($mission->people->count() && $mission->people->count() == 1 )
+                                <a class="mission d-block" href="{{ url('person',$mission->people()->first()->id) }}">{{ $mission->people()->first()->rank->name.'/'.$mission->people()->first()->name }}</a>
+                            @elseif($mission->people->count())
+                                @foreach ($mission->people as $per)
+                                    <a class="mission d-block {{ $loop->last ? 'mb-3' : '' }}" href="{{ url('person',$per->id) }}">{{ $per->rank->name.'/'.$per->name }}</a>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                     <div class="text-light">
                         {{ $mission->desc ? $mission->desc .'.': ''  }} <b>({{ $mission->started_at->locale('ar')->isoFormat('dddd, DD/MM/OY') }})</b>

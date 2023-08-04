@@ -8,7 +8,7 @@
             @endif
         </div>
         <h5 class="mb-0" style="max-width: 65%; overflow: hidden; direction: rtl;">
-            <a data-toggle="tooltip" data-placement="top" title="{{$mission->desc}}" >
+            <a data-toggle="tooltip" class="d-block" data-placement="top" title="{{$mission->desc}}" >
                 <button style="text-decoration:none" class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$status.$mission->id}}" aria-expanded="true" aria-controls="collapseOne">
                     <b>
                         @if($mission->category_id == 1)

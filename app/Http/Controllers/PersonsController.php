@@ -15,21 +15,109 @@ class PersonsController extends Controller
     use Traits\Functions;
 
     public function index(){
-        $officers = Person::where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
-        $subOfficers = Person::where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
-        $soldiers = Person::where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->get();
-        $notForce = Person::whereIsForce(false)->orderBy('deleted_date','DESC')->get();
+        $officers = Person::where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
+        $subOfficers = Person::where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
+        $soldiers = Person::where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
+        $notForce = Person::whereIsForce(false)->orderBy('deleted_date','DESC')->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
 
         $tamam = [
-            'total' => Person::whereService(true)->whereIsForce(true)->count(),
-            'officers' => $officers->count(),
-            'subOfficers' => $subOfficers->count(),
-            'soldiers' => $soldiers->count()
+            'all' =>[
+                'officers' => $officers->count(),
+                'subOfficers' => $subOfficers->count(),
+                'soldiers' => $soldiers->count()
+            ],
+            'fmc' => [
+                'officers' => Person::whereIn('unit_id', [2,3,4,5,6])->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::whereIn('unit_id', [2,3,4,5,6])->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::whereIn('unit_id', [2,3,4,5,6])->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            'ramadan' => [
+                'officers' => Person::whereIn('unit_id', [16,17,18,19,20,21,22])->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::whereIn('unit_id', [16,17,18,19,20,21,22])->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::whereIn('unit_id', [16,17,18,19,20,21,22])->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            '205' => [
+                'officers' => Person::whereIn('unit_id', [7,8,9,10,11,12,13,14])->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::whereIn('unit_id', [7,8,9,10,11,12,13,14])->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::whereIn('unit_id', [7,8,9,10,11,12,13,14])->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            '24' => [
+                'officers' => Person::whereIn('unit_id', [15])->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::whereIn('unit_id', [15])->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::whereIn('unit_id', [15])->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            'ka3da' => [
+                'officers' => Person::where('unit_id', 27)->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::where('unit_id', 27)->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::where('unit_id', 27)->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            'keyada' => [
+                'officers' => Person::where('unit_id', 1)->where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'subOfficers' => Person::where('unit_id', 1)->where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count(),
+                'soldiers' => Person::where('unit_id', 1)->where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->count()
+            ],
+            
         ];
 
         $ranks = Rank::all();
         $units = Unit::all();
         $specialities = Speciality::orderBy('name')->get();
+
+        $ousideAttachedPeople = Person::where('is_force', 1)->whereHas('missions', function ($query){
+            $query->where('category_id', 21)->whereHas('tasks', function ($query){
+                $query->where('status', '<>', 'done');
+            });
+        })->orderBy('rank_id')->with([
+            'rank',
+            'missions' => function ($query){
+                $query->where('category_id', 21)
+                    ->whereHas('tasks', function ($query){
+                        $query->where('status', '<>', 'done');
+                    });
+            }
+        ])->get();
+
+        $insideAttachedPeople = Person::whereHas('missions', function ($query){
+            $query->where('category_id', 20)->whereHas('tasks', function ($query){
+                $query->where('status', '<>', 'done');
+            });
+        })->orderBy('rank_id')->with([
+            'rank',
+            'missions' => function ($query){
+                $query->where('category_id', 20)
+                    ->whereHas('tasks', function ($query){
+                        $query->where('status', '<>', 'done');
+                    });
+            }
+        ])->get();
+        
+        $outsideMissions = Person::where('is_force', 1)->whereHas('missions', function ($query){
+            $query->where('category_id', 59)->whereHas('tasks', function ($query){
+                $query->where('status', '<>', 'done');
+            });
+        })->orderBy('rank_id')->with([
+            'rank',
+            'missions' => function ($query){
+                $query->where('category_id', 59)
+                    ->whereHas('tasks', function ($query){
+                        $query->where('status', '<>', 'done');
+                    });
+            }
+        ])->get();
+
+        $insideMissions = Person::whereHas('missions', function ($query){
+            $query->where('category_id', 60)->whereHas('tasks', function ($query){
+                $query->where('status', '<>', 'done');
+            });
+        })->orderBy('rank_id')->with([
+            'rank',
+            'missions' => function ($query){
+                $query->where('category_id', 60)
+                    ->whereHas('tasks', function ($query){
+                        $query->where('status', '<>', 'done');
+                    });
+            }
+        ])->get();
 
         return view('tanzim.show-persons')->with([
             'officers' => $officers,
@@ -40,6 +128,10 @@ class PersonsController extends Controller
             'units' => $units,
             'specialities' => $specialities,
             'tamam' => $tamam,
+            'ousideAttachedPeople' => $ousideAttachedPeople,
+            'insideAttachedPeople' => $insideAttachedPeople,
+            'outsideMissions' => $outsideMissions,
+            'insideMissions' => $insideMissions,
         ]);
     }
 
@@ -48,11 +140,13 @@ class PersonsController extends Controller
 
         $ar = explode(' ', $q);
 
-        $result = Person::where(function ($query) use ($ar){
+        $result = Person::when($request->rank, fn ($query) =>
+            $query->where('rank_id', $request->rank)
+        )->where(function ($query) use ($ar){
             foreach($ar as $word){
                 $query->where('name', 'like', "%$word%");
             }
-        })->with('rank')->get();
+        })->with('rank')->orderBy('rank_id')->get();
 
         return response()->json([
             'success' => true,

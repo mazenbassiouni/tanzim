@@ -17,7 +17,7 @@
     </div>
     <div id="collapse{{$task->id}}" class="collapse">
         <div class="card-body">
-            <div style="white-space: pre; direction: rtl;">{{$task->desc}}</div>
+            <div style="white-space: pre-line; direction: rtl;">{{$task->desc}}</div>
             @if( $task->status != 'done' )
                 <div class="text-left">
                     <button data-toggle="modal" data-target="#markDone{{$task->id}}" class="btn btn-sm btn-success d-flex align-items-center">إنتهاء البند <img class="ml-1" height="14" src="{{ asset('svg/white-check.svg') }}" alt=""></button>

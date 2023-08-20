@@ -26,25 +26,64 @@
 
         <div class="d-flex flex-row-reverse font-weight-bold">
             <div class="ml-5">
-                <span>قوة : <span class="text-primary">{{ $tamam['total'] }}</span></span>
+                <span>قوة : <span class="text-primary">{{ $tamam['all']['officers'] + $tamam['all']['subOfficers'] + $tamam['all']['soldiers'] }}</span></span>
             </div>
             <div class="ml-5">
-                <span>ضباط : <span class="text-primary">{{ $tamam['officers'] }}</span></span>
+                <span>ضباط : <span class="text-primary">{{ $tamam['all']['officers'] }}</span></span>
+                @if( $insideAttachedPeople->where('rank_id', '<=', 21)->count() || $insideMissions->where('rank_id', '<=', 21)->count() )
+                    <div class="text-success">
+                        <span data-toggle="tooltip" 
+                            data-html="true" 
+                            data-placement="bottom" 
+                            title="
+                                {{ $insideAttachedPeople->where('rank_id', '<=', 21)->count() ? 'إلحاق: '.$insideAttachedPeople->where('rank_id', '<=', 21)->count().'<br>' : ''  }}
+                                {{ $insideMissions->where('rank_id', '<=', 21)->count() ? 'مأمورية عمل: '.$insideMissions->where('rank_id', '<=', 21)->count().'<br>' : ''  }}
+                            ">
+                            +{{ $insideAttachedPeople->where('rank_id', '<=', 21)->count() + $insideMissions->where('rank_id', '<=', 21)->count() }}
+                        </span>
+                    </div>
+                @endif
             </div>
             <div class="ml-5">
-                <span>ضباط الصف : <span class="text-primary">{{ $tamam['subOfficers'] }}</span></span>
+                <span>ضباط الصف : <span class="text-primary">{{ $tamam['all']['subOfficers'] }}</span></span>
+                @if( $insideAttachedPeople->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() || $insideMissions->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() )
+                    <div class="text-success">
+                        <span data-toggle="tooltip" 
+                            data-html="true" 
+                            data-placement="bottom" 
+                            title="
+                                {{ $insideAttachedPeople->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() ? 'إلحاق: '.$insideAttachedPeople->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count().'<br>' : ''  }}
+                                {{ $insideMissions->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() ? 'مأمورية عمل: '.$insideMissions->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count().'<br>' : ''  }}
+                            ">
+                            +{{ $insideAttachedPeople->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() + $insideMissions->where('rank_id', '<', 27)->where('rank_id', '>', 21)->count() }}
+                        </span>
+                    </div>
+                @endif
             </div>
             <div>
-                <span>جنود : <span class="text-primary">{{ $tamam['soldiers'] }}</span></span>
+                <span>جنود : <span class="text-primary">{{ $tamam['all']['soldiers'] }}</span></span>
+                @if( $insideAttachedPeople->where('rank_id', 27)->count() || $insideMissions->where('rank_id', 27)->count() )
+                    <div class="text-success">
+                        <span data-toggle="tooltip" 
+                            data-html="true" 
+                            data-placement="bottom" 
+                            title="
+                                {{ $insideAttachedPeople->where('rank_id', 27)->count() ? 'إلحاق: '.$insideAttachedPeople->where('rank_id', 27)->count().'<br>' : ''  }}
+                                {{ $insideMissions->where('rank_id', 27)->count() ? 'مأمورية عمل: '.$insideMissions->where('rank_id', 27)->count().'<br>' : ''  }}
+                            ">
+                            +{{ $insideAttachedPeople->where('rank_id', 27)->count() + $insideMissions->where('rank_id', 27)->count() }}
+                        </span>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
     <ul class="nav nav-tabs flex-row-reverse mt-3" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" id="officer" data-toggle="tab" href="#officerTab" role="tab" aria-controls="officerTab" aria-selected="true"><b>ضباط</b></a>
+            <a class="nav-link" id="officer" data-toggle="tab" href="#officerTab" role="tab" aria-controls="officerTab" aria-selected="true"><b>ضباط</b></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
             <a class="nav-link" id="subOfficer" data-toggle="tab" href="#subOfficerTab" role="tab" aria-controls="subOfficerTab" aria-selected="false"><b>ضباط الصف</b></a>
         </li>
         <li class="nav-item">
@@ -53,9 +92,12 @@
         <li class="nav-item">
             <a class="nav-link" id="notForce" data-toggle="tab" href="#notForceTab" role="tab" aria-controls="soliderTab" aria-selected="false"><b>شطب</b></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tamam" data-toggle="tab" href="#tamamTab" role="tab" aria-controls="soliderTab" aria-selected="false"><b>تمام</b></a>
+        </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="officerTab" role="tabpanel" aria-labelledby="officer">
+        <div class="tab-pane fade" id="officerTab" role="tabpanel" aria-labelledby="officer">
             <table class="table table-striped">
                 <thead class="bg-primary text-white">
                     <tr>
@@ -87,7 +129,7 @@
                 </tbody>
               </table>
         </div>
-        <div class="tab-pane fade" id="subOfficerTab" role="tabpanel" aria-labelledby="subOfficer">
+        <div class="tab-pane fade show active" id="subOfficerTab" role="tabpanel" aria-labelledby="subOfficer">
             <table class="table table-striped">
                 <thead class="bg-primary text-white">
                     <tr>
@@ -176,6 +218,205 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div class="tab-pane fade" id="tamamTab" role="tabpanel" aria-labelledby="tamam">
+            <table class="table table-striped table-bordered">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">الوحدة</th>
+                        <th scope="col">قوة</th>
+                        <th scope="col">ضباط</th>
+                        <th scope="col">أفراد</th>
+                        <th scope="col">ضباط الصف</th>
+                        <th scope="col">جنود</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">قيادة اللواء</th>
+                        <td>{{ $tamam['keyada']['officers'] + $tamam['keyada']['subOfficers'] + $tamam['keyada']['soldiers'] }}</td>
+                        <td>{{ $tamam['keyada']['officers'] }}</td>
+                        <td>{{ $tamam['keyada']['subOfficers'] + $tamam['keyada']['soldiers'] }}</td>
+                        <td>{{ $tamam['keyada']['subOfficers'] }}</td>
+                        <td>{{ $tamam['keyada']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">مجموعة 24 صيني</th>
+                        <td>{{ $tamam['24']['officers'] + $tamam['24']['subOfficers'] + $tamam['24']['soldiers'] }}</td>
+                        <td>{{ $tamam['24']['officers'] }}</td>
+                        <td>{{ $tamam['24']['subOfficers'] + $tamam['24']['soldiers'] }}</td>
+                        <td>{{ $tamam['24']['subOfficers'] }}</td>
+                        <td>{{ $tamam['24']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">مجموعة 205</th>
+                        <td>{{ $tamam['205']['officers'] + $tamam['205']['subOfficers'] + $tamam['205']['soldiers'] }}</td>
+                        <td>{{ $tamam['205']['officers'] }}</td>
+                        <td>{{ $tamam['205']['subOfficers'] + $tamam['205']['soldiers'] }}</td>
+                        <td>{{ $tamam['205']['subOfficers'] }}</td>
+                        <td>{{ $tamam['205']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">مجموعة رمضان</th>
+                        <td>{{ $tamam['ramadan']['officers'] + $tamam['ramadan']['subOfficers'] + $tamam['ramadan']['soldiers'] }}</td>
+                        <td>{{ $tamam['ramadan']['officers'] }}</td>
+                        <td>{{ $tamam['ramadan']['subOfficers'] + $tamam['ramadan']['soldiers'] }}</td>
+                        <td>{{ $tamam['ramadan']['subOfficers'] }}</td>
+                        <td>{{ $tamam['ramadan']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">مجموعة سليمان عزت</th>
+                        <td>{{ $tamam['fmc']['officers'] + $tamam['fmc']['subOfficers'] + $tamam['fmc']['soldiers'] }}</td>
+                        <td>{{ $tamam['fmc']['officers'] }}</td>
+                        <td>{{ $tamam['fmc']['subOfficers'] + $tamam['fmc']['soldiers'] }}</td>
+                        <td>{{ $tamam['fmc']['subOfficers'] }}</td>
+                        <td>{{ $tamam['fmc']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">القاعدة الإدارية</th>
+                        <td>{{ $tamam['ka3da']['officers'] + $tamam['ka3da']['subOfficers'] + $tamam['ka3da']['soldiers'] }}</td>
+                        <td>{{ $tamam['ka3da']['officers'] }}</td>
+                        <td>{{ $tamam['ka3da']['subOfficers'] + $tamam['ka3da']['soldiers'] }}</td>
+                        <td>{{ $tamam['ka3da']['subOfficers'] }}</td>
+                        <td>{{ $tamam['ka3da']['soldiers'] }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">إجمالي اللواء</th>
+                        <td>{{ 
+                            $tamam['keyada']['officers'] + $tamam['keyada']['subOfficers'] + $tamam['keyada']['soldiers']
+                            + $tamam['24']['officers'] + $tamam['24']['subOfficers'] + $tamam['24']['soldiers']
+                            + $tamam['205']['officers'] + $tamam['205']['subOfficers'] + $tamam['205']['soldiers']
+                            + $tamam['ramadan']['officers'] + $tamam['ramadan']['subOfficers'] + $tamam['ramadan']['soldiers']
+                            + $tamam['fmc']['officers'] + $tamam['fmc']['subOfficers'] + $tamam['fmc']['soldiers']
+                            + $tamam['ka3da']['officers'] + $tamam['ka3da']['subOfficers'] + $tamam['ka3da']['soldiers']
+                        }}</td>
+                        <td>{{ 
+                            $tamam['keyada']['officers']
+                            + $tamam['24']['officers']
+                            + $tamam['205']['officers']
+                            + $tamam['ramadan']['officers']
+                            + $tamam['fmc']['officers']
+                            + $tamam['ka3da']['officers']
+                        }}</td>
+                        <td>{{ 
+                            $tamam['keyada']['subOfficers'] + $tamam['keyada']['soldiers']
+                            + $tamam['24']['subOfficers'] + $tamam['24']['soldiers']
+                            + $tamam['205']['subOfficers'] + $tamam['205']['soldiers']
+                            + $tamam['ramadan']['subOfficers'] + $tamam['ramadan']['soldiers']
+                            + $tamam['fmc']['subOfficers'] + $tamam['fmc']['soldiers']
+                            + $tamam['ka3da']['subOfficers'] + $tamam['ka3da']['soldiers']
+                        }}</td>
+                        <td>{{ 
+                            $tamam['keyada']['subOfficers']
+                            + $tamam['24']['subOfficers']
+                            + $tamam['205']['subOfficers']
+                            + $tamam['ramadan']['subOfficers']
+                            + $tamam['fmc']['subOfficers']
+                            + $tamam['ka3da']['subOfficers']
+                        }}</td>
+                        <td>{{ 
+                            $tamam['keyada']['soldiers']
+                            + $tamam['24']['soldiers']
+                            + $tamam['205']['soldiers']
+                            + $tamam['ramadan']['soldiers']
+                            + $tamam['fmc']['soldiers']
+                            + $tamam['ka3da']['soldiers']
+                        }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card text-right  my-5">
+                <div class="card-header text-white bg-primary">
+                    <div>
+                        <div class="h5 m-0">
+                            إلحاق على الوحدة ({{$insideAttachedPeople->count()}})
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" dir="rtl">
+                    @if ($insideAttachedPeople->count())
+                        @foreach ($insideAttachedPeople as $person)
+                            <div>
+                                <span>{{ $loop->iteration .'- ' }}</span>
+                                <a href="{{ url('person',$person->id) }}">{{ $person->rank->name.'/ '.$person->name }}</a>
+                                @if($person->missions->count() && $person->missions->first()->desc) <span>({{ $person->missions->first()->desc }})</span> @endif
+                            </div>
+                        @endforeach
+                    @else
+                        <div>لا يكن</div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card text-right  my-5">
+                <div class="card-header text-white bg-primary">
+                    <div>
+                        <div class="h5 m-0">
+                            إلحاق خارج الوحدة ({{$ousideAttachedPeople->count()}})
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" dir="rtl">
+                    @if ($ousideAttachedPeople->count())
+                        @foreach ($ousideAttachedPeople as $person)
+                            <div>
+                                <span>{{ $loop->iteration .'- ' }}</span>
+                                <a href="{{ url('person',$person->id) }}">{{ $person->rank->name.'/ '.$person->name }}</a>
+                                @if($person->missions->count() && $person->missions->first()->desc) <span>({{ $person->missions->first()->desc }})</span> @endif
+                            </div>
+                        @endforeach
+                    @else
+                        <div>لا يكن</div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card text-right  my-5">
+                <div class="card-header text-white bg-primary">
+                    <div>
+                        <div class="h5 m-0">
+                            مأمورية عمل ({{$outsideMissions->count()}})
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" dir="rtl">
+                    @if ($outsideMissions->count())
+                        @foreach ($outsideMissions as $person)
+                            <div>
+                                <span>{{ $loop->iteration .'- ' }}</span>
+                                <a href="{{ url('person',$person->id) }}">{{ $person->rank->name.'/ '.$person->name }}</a>
+                                @if($person->missions->count() && $person->missions->first()->desc) <span>({{ $person->missions->first()->desc }})</span> @endif
+                            </div>
+                        @endforeach
+                    @else
+                        <div>لا يكن</div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card text-right  my-5">
+                <div class="card-header text-white bg-primary">
+                    <div>
+                        <div class="h5 m-0">
+                            مأمورية عمل طرفنا ({{$insideMissions->count()}})
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body" dir="rtl">
+                    @if ($insideMissions->count())
+                        @foreach ($insideMissions as $person)
+                            <div>
+                                <span>{{ $loop->iteration .'- ' }}</span>
+                                <a href="{{ url('person',$person->id) }}">{{ $person->rank->name.'/ '.$person->name }}</a>
+                                @if($person->missions->count() && $person->missions->first()->desc) <span>({{ $person->missions->first()->desc }})</span> @endif
+                            </div>
+                        @endforeach
+                    @else
+                        <div>لا يكن</div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 
@@ -373,6 +614,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <select id="rankIdSearch" class="form-select form-control text-right" style="direction: rtl">
+                            <option value=""></option>
+                            @foreach ($ranks as $rank)
+                                <option value="{{ $rank->id }}"  {{ old('rankId') == $rank->id ? 'selected' : '' }}>{{ $rank->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text justify-content-center">رتبة/درجة</span>
+                        </div>
+                    </div>
                     <div class="input-group mb-3 search-input-group">
                         <input class="form-control text-right" placeholder="بحث" id="personSearch" autocomplete="off">
                         <div class="input-group-append">
@@ -505,7 +757,7 @@
             sBox.classList.remove('d-none');
             
             (async function(){
-                const resObj = await fetch('{{ route('person-search') }}?search='+s);
+                const resObj = await fetch('{{ route('person-search') }}?search='+s+'&rank='+rankIdSearch.value);
                 const res = await resObj.json();
                 
                 if(res.success == true && res.result.length){
@@ -535,6 +787,10 @@
     });
     
     $('#searchPersonModal').on('shown.bs.modal', () => {
+        personSearch.focus();
+    })
+
+    rankIdSearch.addEventListener('change', () => {
         personSearch.focus();
     })
 </script>

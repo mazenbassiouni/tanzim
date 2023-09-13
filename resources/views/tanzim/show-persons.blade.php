@@ -714,7 +714,7 @@
             sBox.classList.remove('d-none');
             
             (async function(){
-                const resObj = await fetch('{{ route('person-search') }}?search='+s);
+                const resObj = await fetch('{{ route('person-search') }}?search='+s+'&rank='+rankIdSearch.value);
                 const res = await resObj.json();
                 
                 if(res.success == true && res.result.length){
@@ -769,10 +769,7 @@
                         element.addEventListener('click', e=>{
                             sBox.classList.add('d-none');
                             sBox.innerHTML = '';
-
-                            personNameDisplay.innerHTML = one.name;
-                            personRankDisplay.innerHTML = one.rank.name;
-                            personId.value = one.id;
+                            window.location.href = `/person/${one.id}`;
                         })
                         sBox.appendChild(element);
                     })

@@ -81,7 +81,7 @@
 
     <ul class="nav nav-tabs flex-row-reverse mt-3" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" id="officer" data-toggle="tab" href="#officerTab" role="tab" aria-controls="officerTab" aria-selected="true"><b>ضباط</b></a>
+            <a class="nav-link active" id="officer" data-toggle="tab" href="#officerTab" role="tab" aria-controls="officerTab" aria-selected="true"><b>ضباط</b></a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" id="subOfficer" data-toggle="tab" href="#subOfficerTab" role="tab" aria-controls="subOfficerTab" aria-selected="false"><b>ضباط الصف</b></a>
@@ -97,7 +97,7 @@
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade" id="officerTab" role="tabpanel" aria-labelledby="officer">
+        <div class="tab-pane fade show active" id="officerTab" role="tabpanel" aria-labelledby="officer">
             <table class="table table-striped">
                 <thead class="bg-primary text-white">
                     <tr>
@@ -129,7 +129,7 @@
                 </tbody>
               </table>
         </div>
-        <div class="tab-pane fade show active" id="subOfficerTab" role="tabpanel" aria-labelledby="subOfficer">
+        <div class="tab-pane fade" id="subOfficerTab" role="tabpanel" aria-labelledby="subOfficer">
             <table class="table table-striped">
                 <thead class="bg-primary text-white">
                     <tr>
@@ -168,6 +168,7 @@
                         <th scope="col">إسم</th>
                         <th scope="col">رقم عسكري</th>
                         <th scope="col">تخصص</th>
+                        <th scope="col">تسريح</th>
                         <th scope="col">تسكين</th>
                         <th scope="col">تسكين داخلي</th>
                         <th scope="col">ملاحظات</th>
@@ -181,6 +182,7 @@
                             <td><a href="{{ url('person',$solider->id) }}">{{ $solider->name }}</a></td>
                             <td>{{ $solider->military_num }}</td>
                             <td>{{ $solider->speciality->name }}</td>
+                            <td>{{ $solider->lay_off_date->format('d/m/y') }}</td>
                             <td>{{ $solider->milUnit->name }}</td>
                             <td>{{ $solider->Unit->name }}</td>
                             <td>{{ $solider->note }}</td>

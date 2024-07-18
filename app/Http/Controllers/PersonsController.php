@@ -15,9 +15,9 @@ class PersonsController extends Controller
     use Traits\Functions;
 
     public function index(){
-        $officers = Person::where('rank_id','<=', 21)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
+        $officers = Person::where('rank_id','<=', 21)->orderBy('rank_id')->orderBy('seniority_num')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
         $subOfficers = Person::where('rank_id','>', 21)->where('rank_id','<>', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
-        $soldiers = Person::where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
+        $soldiers = Person::where('rank_id','=', 27)->orderBy('rank_id')->whereService(true)->whereIsForce(true)->with(['rank', 'speciality', 'unit', 'milUnit'])->orderBy('lay_off_date')->get();
         $notForce = Person::whereIsForce(false)->orderBy('deleted_date','DESC')->with(['rank', 'speciality', 'unit', 'milUnit'])->get();
 
         $tamam = [
